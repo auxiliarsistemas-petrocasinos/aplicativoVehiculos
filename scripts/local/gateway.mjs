@@ -13,6 +13,21 @@ http
       return;
     }
     const [prefix, port] = mapping;
+    const origin = req.headers.origin;
+    const cors = ['http://127.0.0.1:3000', 'http://localhost:3000'].includes(origin)
+      ? {
+          'access-control-allow-origin': origin,
+          'access-control-allow-methods': 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS',
+          'access-control-allow-headers':
+            'authorization,apikey,content-type,x-client-info,x-upsert,x-supabase-api-version,cache-control',
+          vary: 'Origin',
+        }
+      : {};
+    if (req.method === 'OPTIONS') {
+      res.writeHead(cors['access-control-allow-origin'] ? 204 : 403, cors);
+      res.end();
+      return;
+    }
     const upstream = http.request(
       {
         host: '127.0.0.1',
@@ -22,7 +37,7 @@ http
         headers: { ...req.headers, host: `127.0.0.1:${port}` },
       },
       (response) => {
-        res.writeHead(response.statusCode ?? 502, response.headers);
+        res.writeHead(response.statusCode ?? 502, { ...response.headers, ...cors });
         response.pipe(res);
       },
     );
@@ -32,4 +47,6 @@ http
     });
     req.pipe(upstream);
   })
-  .listen(54321, '127.0.0.1', () => console.log('Gateway de pruebas en 127.0.0.1:54321'));
+  .listen(Number(process.env.TEST_GATEWAY_PORT || 54321), '127.0.0.1', () =>
+    console.log('Gateway local de pruebas listo.'),
+  );

@@ -13,3 +13,5 @@ docs/reference/
 *.xlsx
 *.pdf
 .local/
+
+.vercel/

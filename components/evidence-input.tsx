@@ -3,12 +3,28 @@ import { useRef, useState } from 'react';
 import { Camera, CheckCircle2, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { photoError } from '@/features/inspections/validation';
+import { browserClient } from '@/lib/supabase/browser';
 export async function uploadEvidence(file: File, shiftId: string, kind = 'photo') {
-  const form = new FormData();
-  form.set('file', file);
-  form.set('shift_id', shiftId);
-  form.set('kind', kind);
-  const response = await fetch('/api/evidence', { method: 'POST', body: form });
+  const validation = photoError(file);
+  if (validation) throw new Error(validation);
+  const db = browserClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await db.auth.getUser();
+  if (userError || !user) throw new Error('Inicia sesión nuevamente para guardar la evidencia.');
+  const id = crypto.randomUUID();
+  const path = `${user.id}/${shiftId}/${id}`;
+  const { error: uploadError } = await db.storage.from('evidence').upload(path, file, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (uploadError) throw new Error('No se confirmó la carga. Conserva el archivo y reintenta.');
+  const response = await fetch('/api/evidence', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, shift_id: shiftId, kind }),
+  });
   const body = await response.json();
   if (!response.ok || !body.id) throw new Error(body.error ?? 'No se confirmó la carga.');
   return body.id as string;

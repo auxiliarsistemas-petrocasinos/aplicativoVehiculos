@@ -20,6 +20,11 @@ test('recorrido real: alias, cambio inicial, apertura, foto, firma, incidencia y
   page,
 }, testInfo) => {
   test.skip(!configured, 'Requiere servicios locales y .env.local con TEST_PASSWORD.');
+  const receiptSizes: number[] = [];
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/evidence') && request.method() === 'POST')
+      receiptSizes.push(request.postDataBuffer()?.length ?? 0);
+  });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   expect(['127.0.0.1', 'localhost']).toContain(new URL(url).hostname);
   const service = createClient(url, process.env.SUPABASE_SECRET_KEY!, {
@@ -87,7 +92,25 @@ test('recorrido real: alias, cambio inicial, apertura, foto, firma, incidencia y
   await page
     .locator('input[type=file]')
     .first()
-    .setInputFiles({ name: 'evidencia.png', mimeType: 'image/png', buffer: png });
+    .setInputFiles({
+      name: 'imagen-invalida.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('contenido sin imagen'),
+    });
+  await expect(
+    page.getByText('El contenido no corresponde a una imagen permitida.', { exact: true }),
+  ).toBeVisible();
+  expect(
+    (await service.from('evidences').select('id').eq('owner_id', user.user!.id)).data,
+  ).toHaveLength(0);
+  await page
+    .locator('input[type=file]')
+    .first()
+    .setInputFiles({
+      name: 'evidencia.png',
+      mimeType: 'image/png',
+      buffer: Buffer.concat([png, Buffer.alloc(5 * 1024 * 1024)]),
+    });
   await expect(page.getByText('1 foto(s) guardada(s)', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Guardar borrador', exact: true }).click();
   await expect(page.getByText('Borrador guardado en el servidor.', { exact: false })).toBeVisible();
@@ -133,6 +156,8 @@ test('recorrido real: alias, cambio inicial, apertura, foto, firma, incidencia y
   expect(
     (await service.from('inspections').select('id').eq('shift_id', shiftId)).data,
   ).toHaveLength(2);
+  expect(receiptSizes.length).toBeGreaterThanOrEqual(4);
+  expect(receiptSizes.every((size) => size > 0 && size < 4096)).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Hola, Conductor', exact: true })).toBeVisible();

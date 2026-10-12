@@ -283,7 +283,7 @@ const png = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==',
   'base64',
 );
-async function evidence(user, shift, kind = 'photo') {
+async function evidence(user, shift, kind = 'photo', beforeRegister) {
   const id = randomUUID();
   const path = `${user.id}/${shift}/${id}`;
   ok(
@@ -291,6 +291,7 @@ async function evidence(user, shift, kind = 'photo') {
       .from('evidence')
       .upload(path, png, { contentType: 'image/png', upsert: false }),
   );
+  if (beforeRegister) await beforeRegister(path);
   ok(await command(user.db, 'register_evidence', { shift_id: shift, id, path, kind }));
   return { id, path };
 }
@@ -307,7 +308,13 @@ let sig1, sig2, photo1;
 await test('Storage privado: carga real y asociación; acceso ajeno denegado', async () => {
   sig1 = await evidence(driver, sid, 'signature');
   sig2 = await evidence(second, sid2, 'signature');
-  photo1 = await evidence(driver, sid);
+  photo1 = await evidence(driver, sid, 'photo', async (path) => {
+    ok(await driver.db.storage.from('evidence').download(path));
+    denied(await second.db.storage.from('evidence').download(path));
+    denied(await admin.db.storage.from('evidence').download(path));
+    denied(await manager.db.storage.from('evidence').download(path));
+    denied(await anon.storage.from('evidence').download(path));
+  });
   denied(await second.db.storage.from('evidence').download(photo1.path));
   denied(await anon.storage.from('evidence').download(photo1.path));
   ok(await driver.db.storage.from('evidence').download(photo1.path));

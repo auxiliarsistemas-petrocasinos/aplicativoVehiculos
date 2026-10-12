@@ -8,7 +8,7 @@ Demostración funcional de gestión de flota de Petrocasinos, desarrollada desde
 
 Login por alias, contraseña visible/oculta, cambio inicial obligatorio en Auth/DB, perfiles por rol, creación/restablecimiento administrativo, campos, vehículos, documentos, restricciones, traslados con historial, autoevaluación, inspecciones versionadas, fotos privadas, firma dibujada, apertura/entrega/cierre, incidencias/seguimiento, sustitución autorizada en el mismo turno, regularización con retención, historial, dashboard Recharts y CSV. Formularios conectados a persistencia real; no hay datos estáticos sustituyendo servicios.
 
-Consulta [resultados y límites](docs/verification.md), [formularios](docs/forms-specification.md), [decisiones](docs/decisions/001-implementation.md), [modelo y RLS](docs/data-model.md) e [indicadores](docs/analytics.md).
+Consulta [preparación de Supabase/Vercel](docs/deployment.md), [resultados y límites](docs/verification.md), [formularios](docs/forms-specification.md), [decisiones](docs/decisions/001-implementation.md), [modelo y RLS](docs/data-model.md) e [indicadores](docs/analytics.md).
 
 ## Preparación estándar
 
@@ -29,9 +29,9 @@ npm run seed:demo
 npm run dev
 ```
 
-`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las ocho migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
+`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las nueve migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
 
-Abrir `http://localhost:3000`. Para una demostración compartida se debe configurar Supabase de prueba, URLs de Auth y HTTPS; no se ha autorizado ni realizado despliegue.
+Abrir `http://localhost:3000`. El despliegue de prueba en Supabase/Vercel fue autorizado el 12 de octubre de 2026; está pendiente de disponer de las conexiones y proyectos remotos. Ver `docs/deployment.md`.
 
 ## Alternativa local para Docker con poco disco
 

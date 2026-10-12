@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { session } from '@/features/auth/session';
+import { z } from 'zod';
 import { photoError } from '@/features/inspections/validation';
+const uploadReceipt = z.object({
+  id: z.uuid(),
+  shift_id: z.uuid(),
+  kind: z.enum(['photo', 'signature']),
+});
 export async function POST(request: Request) {
   try {
     const origin = request.headers.get('origin');
@@ -10,20 +16,21 @@ export async function POST(request: Request) {
       !['http:', 'https:'].includes(new URL(origin).protocol)
     )
       return NextResponse.json({ error: 'Origen no autorizado.' }, { status: 403 });
-    if (Number(request.headers.get('content-length') ?? 0) > 9 * 1024 * 1024)
-      return NextResponse.json(
-        { error: 'El archivo supera el tamaño permitido.' },
-        { status: 413 },
-      );
+    if (Number(request.headers.get('content-length') ?? 0) > 4096)
+      return NextResponse.json({ error: 'Solicitud demasiado grande.' }, { status: 413 });
     const { db, profile } = await session();
     if (profile.role !== 'driver')
       return NextResponse.json({ error: 'Acceso no autorizado.' }, { status: 403 });
-    const form = await request.formData();
-    const file = form.get('file');
-    const shift = String(form.get('shift_id'));
-    const kind = String(form.get('kind'));
-    if (!(file instanceof File) || !['photo', 'signature'].includes(kind))
-      return NextResponse.json({ error: 'Archivo no válido.' }, { status: 400 });
+    const { id, shift_id: shift, kind } = uploadReceipt.parse(await request.json());
+    const path = `${profile.id}/${shift}/${id}`;
+    // El binario viaja directamente a Storage; Vercel recibe solo este recibo.
+    // La descarga usa el JWT del propietario y RLS, nunca la clave de servicio.
+    const { data: file, error: downloadError } = await db.storage.from('evidence').download(path);
+    if (downloadError || !file)
+      return NextResponse.json(
+        { error: 'No se pudo verificar la imagen guardada. Conserva el archivo y reintenta.' },
+        { status: 400 },
+      );
     const validation = photoError(file);
     if (validation) return NextResponse.json({ error: validation }, { status: 400 });
     const bytes = new Uint8Array(await file.arrayBuffer());
@@ -41,16 +48,6 @@ export async function POST(request: Request) {
     )
       return NextResponse.json(
         { error: 'El contenido no corresponde a una imagen permitida.' },
-        { status: 400 },
-      );
-    const id = crypto.randomUUID();
-    const path = `${profile.id}/${shift}/${id}`;
-    const { error: uploadError } = await db.storage
-      .from('evidence')
-      .upload(path, bytes, { contentType: file.type, upsert: false });
-    if (uploadError)
-      return NextResponse.json(
-        { error: 'No se confirmó la carga. Conserva el archivo y reintenta.' },
         { status: 400 },
       );
     const { error } = await db.rpc('execute_command', {
