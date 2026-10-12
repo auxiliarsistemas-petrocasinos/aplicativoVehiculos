@@ -2,6 +2,10 @@
 
 Fecha: 2026-10-12. Rama de trabajo: `develop`, base `f934db1`. El repositorio remoto fue comprobado; se recuperó `develop` antes de modificar código. La rama inicial `work` pertenecía al entorno: no se desarrolló ni publicó en ella. No se tocó `main`, no se hizo push ni despliegue.
 
+## Commits y estado de Git
+
+Implementación: `e89f47a` — `feat: implement secure fleet management demo` (96 archivos). Un commit documental posterior registra esta referencia y el cierre de verificación. Ambos pertenecen exclusivamente a `develop`. No se publicaron al remoto. Los requisitos aprobados y la arquitectura permanecen idénticos a la base `f934db1`.
+
 ## Fuentes efectivamente leídas
 
 Se leyó íntegramente el prompt maestro v0.2 adjunto y `AGENTS.md`, `README.md`, `docs/requirements.md` v0.3 y `docs/architecture.md` v0.1 desde `develop`. Se abrieron los cinco formatos con openpyxl, python-docx y pypdf; además se revisó visualmente la página 2 del PDF. El mockup adjunto orientó paleta azul, tarjetas, navegación, progreso y disposición móvil; no se copiaron sus imágenes ni activos.
