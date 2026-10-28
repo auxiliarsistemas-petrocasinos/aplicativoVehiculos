@@ -3,11 +3,13 @@
 import { execFileSync } from 'node:child_process';
 import { randomBytes, createHmac } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
-const root = resolve(new URL('..', import.meta.url).pathname);
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const local = resolve(root, '.local');
+const dockerHost = process.platform === 'win32' ? [] : ['--host=unix:///var/run/docker.sock'];
 const docker = (args) =>
-  execFileSync('docker', ['--host=unix:///var/run/docker.sock', ...args], {
+  execFileSync('docker', [...dockerHost, ...args], {
     encoding: 'utf8',
     stdio: ['pipe', 'pipe', 'pipe'],
   });
@@ -81,17 +83,7 @@ for (let n = 0; n < 60; n++) {
 if (!ready) throw new Error('PostgreSQL local no inició. Revisa sus logs.');
 execFileSync(
   'docker',
-  [
-    '--host=unix:///var/run/docker.sock',
-    'exec',
-    '-i',
-    'vehicles-db',
-    'psql',
-    '-U',
-    'postgres',
-    '-v',
-    'ON_ERROR_STOP=1',
-  ],
+  [...dockerHost, 'exec', '-i', 'vehicles-db', 'psql', '-U', 'postgres', '-v', 'ON_ERROR_STOP=1'],
   {
     input: await readFile(resolve(root, 'scripts/local/init.sql')),
     stdio: ['pipe', 'pipe', 'pipe'],

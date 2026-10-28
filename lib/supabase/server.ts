@@ -20,8 +20,8 @@ export async function serverClient() {
             values.forEach(({ name, value, options }) =>
               jar.set(name, value, {
                 ...options,
-                sameSite: 'lax',
-                secure: process.env.NODE_ENV === 'production',
+                sameSite: options?.sameSite ?? 'lax',
+                secure: Boolean(options?.secure || process.env.NODE_ENV === 'production'),
               }),
             );
           } catch {

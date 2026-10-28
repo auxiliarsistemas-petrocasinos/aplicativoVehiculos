@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSnapshot } from '@/lib/supabase/queries';
 import { shiftsCsv } from '@/features/analytics/metrics';
+import { canExport } from '@/features/auth/authorization';
 export async function GET(request: Request) {
   try {
     const data = await getSnapshot();
-    if (data.profile.role === 'driver')
+    if (!canExport(data.profile.role))
       return new NextResponse('Acceso no autorizado', { status: 403 });
     const p = new URL(request.url).searchParams;
     return new NextResponse(
