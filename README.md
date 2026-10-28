@@ -8,11 +8,11 @@ Demostración funcional de gestión de flota de Petrocasinos, desarrollada desde
 
 Login por alias, contraseña visible/oculta, cambio inicial obligatorio en Auth/DB, perfiles por rol, creación/restablecimiento administrativo, campos, vehículos, documentos, restricciones, traslados con historial, autoevaluación, inspecciones versionadas, fotos privadas, firma dibujada, apertura/entrega/cierre, incidencias/seguimiento, sustitución autorizada en el mismo turno, regularización con retención, historial, dashboard Recharts y CSV. Formularios conectados a persistencia real; no hay datos estáticos sustituyendo servicios.
 
-Consulta [preparación de Supabase/Vercel](docs/deployment.md), [resultados y límites](docs/verification.md), [formularios](docs/forms-specification.md), [decisiones](docs/decisions/001-implementation.md), [modelo y RLS](docs/data-model.md) e [indicadores](docs/analytics.md).
+Consulta [entorno de desarrollo](docs/development.md), [guía de contribución](CONTRIBUTING.md), [preparación de Supabase/Vercel](docs/deployment.md), [resultados y límites](docs/verification.md), [formularios](docs/forms-specification.md), [decisiones](docs/decisions/001-implementation.md), [modelo y RLS](docs/data-model.md) e [indicadores](docs/analytics.md).
 
 ## Preparación estándar
 
-Requiere Node.js 22.12+ (verificado con Node 24), npm y Docker para Supabase local.
+Requiere Node.js 24.22.1 y npm 11.19.1, declarados en `.nvmrc` y `package.json`. Docker solo es necesario para las pruebas con Supabase local.
 
 ```bash
 npm ci
@@ -55,17 +55,20 @@ Los scripts alternativos están pensados para base nueva. Tras completar las pru
 ## Pruebas y compilación
 
 ```bash
-npm run typecheck
-npm run lint
-npm test
-npm run build
+npm run verify
+npm run format:check
+npm run audit:prod
+npm run test:e2e:install
+npm run test:e2e:access
 npm run test:integration
 npm run test:e2e
 ```
 
+`verify` ejecuta formato, lint, generación y verificación de tipos, pruebas unitarias y build de producción. `audit:prod` rechaza vulnerabilidades altas o críticas en dependencias que llegan a producción. El E2E de acceso no necesita Supabase y también se ejecuta en CI.
+
 Integración requiere `.env.local` local, migraciones, seed, `DEMO_PASSWORD` y `TEST_PASSWORD` privadas; crea cuentas/vehículos ficticios aislados por ejecución. Comprueba Auth, permisos, SQL/RLS, Storage, evidencia, concurrencia, idempotencia y ciclo de turno. Nunca apuntar estos scripts a producción: rechazan destinos distintos de localhost.
 
-Playwright usa Chromium de `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` (en este entorno `/usr/bin/chromium`). Incluye escritorio y tamaños Pixel 7/iPhone 13. Son emulaciones de tamaño/interacción en Chromium; no certifican dispositivos físicos ni Safari. Las pruebas de recorrido se omiten explícitamente si falta la configuración de integración; las pruebas básicas de acceso siguen disponibles.
+Playwright usa por defecto su Chromium administrado. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` permite seleccionar opcionalmente un navegador del sistema sin asumir rutas distintas entre Windows y Linux. Incluye escritorio y tamaños Pixel 7/iPhone 13. Son emulaciones de tamaño/interacción en Chromium; no certifican dispositivos físicos ni Safari. Las pruebas de recorrido se omiten explícitamente si falta la configuración de integración; las pruebas básicas de acceso siguen disponibles.
 
 `npm run build` genera salida standalone para servidor Node. `npm start` prepara los activos estáticos y ejecuta ese servidor; usa `APP_HOST` si necesitas cambiar la interfaz de escucha. No se depende de APIs de Vercel. Para llevar la salida standalone a otro host, copiar también `.next/static` y `public/` si existe, configurar variables y proxy HTTPS. Para probar la compilación local, mantén `npm start` en una terminal y ejecuta `npm run test:e2e` en otra: Playwright reutiliza el servidor disponible en el puerto 3000. No se han validado Docker de producción, copias, SMTP ni infraestructura empresarial.
 
@@ -77,4 +80,4 @@ La clave privilegiada solo sirve a cuentas y scripts técnicos. Las acciones de 
 
 No se versionan documentos originales, extracciones, credenciales ni datos reales. El catálogo digital tiene 245 referencias saneadas, seis preguntas de fatiga y 56 controles de inspección; requiere ratificación PESV. Los originales solo estuvieron en el directorio de adjuntos, fuera del repositorio.
 
-Desarrollo y commits únicamente en `develop`. `main` permanece intacta. Mensajes de commit en inglés; interfaz y documentación en español.
+El trabajo ordinario parte de `develop` y vuelve mediante pull request. `main` recibe únicamente promociones revisadas desde `develop`; no se realizan pushes directos. Mensajes de commit en inglés; interfaz y documentación en español.
