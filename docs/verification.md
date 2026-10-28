@@ -223,3 +223,20 @@ La tabla de resultados de esta estabilización se completa únicamente con compr
 | Supabase/Vercel administrado | NOT RUN · sin acceso a producción   |
 
 El E2E de acceso se ejecutó dos veces después de corregir la ruta del navegador. La segunda corrección reemplaza el `webServer` interno de Playwright por un lanzador Node que inicia y detiene explícitamente el árbol del servidor; así el comando finaliza en Windows y conserva reutilización de un servidor ya disponible. En CI se instalará Chromium administrado y se ejecutará la misma orden.
+
+## Portabilidad de tipos, formato y E2E — 2026-10-28
+
+Esta actualización no modifica reglas de negocio, migraciones ni datos. Se añadió `.gitattributes` con finales de línea LF, Prettier valida el formato mediante `npm run format:check` dentro de `npm run verify` y `next-env.d.ts` deja de versionarse, como recomienda Next.js. `npm run typecheck` ejecuta primero `next typegen`, por lo que genera los tipos de producción requeridos antes de TypeScript independientemente de que la última ejecución haya sido de desarrollo o build.
+
+El runner de Playwright ahora diferencia un `/login` listo (HTTP 2xx) de un puerto 3000 ocupado. Con un servidor temporal ajeno que devolvía HTTP 404, abortó con el error esperado en 1,4 segundos, sin esperar 120 segundos. El E2E final volvió a iniciar su servidor normal y completó correctamente.
+
+| Comprobación                 | Resultado verificado en Windows                               |
+| ---------------------------- | ------------------------------------------------------------- |
+| `npm ci`                     | PASS · 472 paquetes · 0 vulnerabilidades                      |
+| `npm run format:check`       | PASS                                                          |
+| `npm run verify`             | PASS · formato, lint, tipos, 18 unitarias y build de 15 rutas |
+| `npm run audit:prod`         | PASS · 0 vulnerabilidades                                     |
+| `npm run audit:all`          | PASS · 0 vulnerabilidades                                     |
+| `npm run test:e2e:access`    | PASS · 6/6                                                    |
+| `git diff --check`           | PASS                                                          |
+| Turbopack en `npm run build` | PASS · se mantiene `next build`; no fue necesario Webpack     |

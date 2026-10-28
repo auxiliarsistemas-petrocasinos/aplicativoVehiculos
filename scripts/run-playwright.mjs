@@ -5,21 +5,31 @@ const baseUrl = 'http://127.0.0.1:3000';
 const cli = resolve('node_modules/@playwright/test/cli.js');
 let server;
 let ownsServer = false;
+let startupError;
 
-async function available() {
+async function probeServer() {
   try {
     const response = await fetch(`${baseUrl}/login`, { signal: AbortSignal.timeout(2000) });
-    return response.ok;
+    return { ready: response.ok, status: response.status };
   } catch {
-    return false;
+    return { ready: false };
   }
 }
 
 async function waitForServer() {
   const deadline = Date.now() + 120_000;
   while (Date.now() < deadline) {
-    if (await available()) return;
-    if (server?.exitCode !== null) throw new Error('El servidor E2E terminó antes de estar listo.');
+    const probe = await probeServer();
+    if (probe.ready) return;
+    if (probe.status) {
+      throw new Error(
+        `El servidor E2E respondió HTTP ${probe.status} en /login antes de estar listo.`,
+      );
+    }
+    if (startupError) throw startupError;
+    if (server?.exitCode !== null) {
+      throw new Error('El servidor E2E terminó antes de estar listo.');
+    }
     await new Promise((resolveDelay) => setTimeout(resolveDelay, 500));
   }
   throw new Error('El servidor E2E no estuvo disponible en 120 segundos.');
@@ -39,12 +49,22 @@ function stopServer() {
 }
 
 async function main() {
-  if (!(await available())) {
+  const existingServer = await probeServer();
+  if (!existingServer.ready && existingServer.status) {
+    throw new Error(
+      `El puerto 3000 ya responde con HTTP ${existingServer.status} en /login; detén ese proceso o usa el servidor correcto antes de ejecutar Playwright.`,
+    );
+  }
+
+  if (!existingServer.ready) {
     ownsServer = true;
     server = spawn(process.execPath, ['scripts/test-server.mjs'], {
       detached: process.platform !== 'win32',
       env: process.env,
       stdio: 'inherit',
+    });
+    server.once('error', (error) => {
+      startupError = new Error(`No se pudo iniciar el servidor E2E: ${error.message}`);
     });
     await waitForServer();
   }

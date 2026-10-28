@@ -56,6 +56,7 @@ Los scripts alternativos están pensados para base nueva. Tras completar las pru
 
 ```bash
 npm run verify
+npm run format:check
 npm run audit:prod
 npm run test:e2e:install
 npm run test:e2e:access
@@ -63,7 +64,7 @@ npm run test:integration
 npm run test:e2e
 ```
 
-`verify` ejecuta lint, TypeScript, 18 pruebas unitarias y build de producción. `audit:prod` rechaza vulnerabilidades altas o críticas en dependencias que llegan a producción. El E2E de acceso no necesita Supabase y también se ejecuta en CI.
+`verify` ejecuta formato, lint, generación y verificación de tipos, pruebas unitarias y build de producción. `audit:prod` rechaza vulnerabilidades altas o críticas en dependencias que llegan a producción. El E2E de acceso no necesita Supabase y también se ejecuta en CI.
 
 Integración requiere `.env.local` local, migraciones, seed, `DEMO_PASSWORD` y `TEST_PASSWORD` privadas; crea cuentas/vehículos ficticios aislados por ejecución. Comprueba Auth, permisos, SQL/RLS, Storage, evidencia, concurrencia, idempotencia y ciclo de turno. Nunca apuntar estos scripts a producción: rechazan destinos distintos de localhost.
 
