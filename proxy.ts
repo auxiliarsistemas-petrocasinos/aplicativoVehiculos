@@ -13,12 +13,18 @@ export async function proxy(request: NextRequest) {
         setAll: (values) => {
           values.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
-          values.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+          values.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, {
+              ...options,
+              sameSite: options?.sameSite ?? 'lax',
+              secure: Boolean(options?.secure || process.env.NODE_ENV === 'production'),
+            }),
+          );
         },
       },
     },
   );
-  await supabase.auth.getUser();
+  await supabase.auth.getClaims();
   return response;
 }
 export const config = { matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'] };

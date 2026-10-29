@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { adminClient } from '@/lib/supabase/admin';
 import { serverClient } from '@/lib/supabase/server';
+import { canAssignRole, canManageAccounts, canResetPassword } from './authorization';
 import { session } from './session';
 import { normalizeAlias, isValidAlias, suggestAlias } from './alias';
 export async function login(form: FormData) {
@@ -75,8 +76,7 @@ export async function suggestAccountAlias(
 ) {
   try {
     const { profile, db } = await session();
-    if (!['fleet_admin', 'it_superadmin'].includes(profile.role))
-      return { alias: null, reason: 'Acceso no autorizado.' };
+    if (!canManageAccounts(profile.role)) return { alias: null, reason: 'Acceso no autorizado.' };
     const parts = z
       .array(z.string().max(128))
       .length(3)
@@ -103,10 +103,7 @@ export async function createAccount(input: unknown) {
   try {
     const { profile } = await session();
     const data = accountSchema.parse(input);
-    if (
-      !['fleet_admin', 'it_superadmin'].includes(profile.role) ||
-      (profile.role === 'fleet_admin' && data.role !== 'driver')
-    )
+    if (!canAssignRole(profile.role, data.role))
       return { error: 'No tienes permiso para asignar ese rol.' };
     const admin = adminClient();
     const { data: created, error } = await admin.auth.admin.createUser({
@@ -142,10 +139,9 @@ export async function resetPassword(id: string, password: string) {
     if (password.length < 12 || password.length > 128)
       return { error: 'Usa una contraseña temporal de 12 a 128 caracteres.' };
     const { profile, db } = await session();
-    if (!['fleet_admin', 'it_superadmin'].includes(profile.role))
-      return { error: 'Acceso no autorizado.' };
+    if (!canManageAccounts(profile.role)) return { error: 'Acceso no autorizado.' };
     const { data: target } = await db.from('profiles').select('role').eq('id', id).single();
-    if (!target || (profile.role === 'fleet_admin' && target.role !== 'driver'))
+    if (!target || !canResetPassword(profile.role, target.role, profile.id === id))
       return { error: 'Restablecimiento no autorizado.' };
     const admin = adminClient();
     const { error: guard } = await admin.rpc('reset_password_guard', {

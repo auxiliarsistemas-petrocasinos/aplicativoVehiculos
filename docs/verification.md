@@ -240,3 +240,21 @@ El runner de Playwright ahora diferencia un `/login` listo (HTTP 2xx) de un puer
 | `npm run test:e2e:access`    | PASS · 6/6                                                    |
 | `git diff --check`           | PASS                                                          |
 | Turbopack en `npm run build` | PASS · se mantiene `next build`; no fue necesario Webpack     |
+
+## Endurecimiento de autenticación y permisos — 2026-10-28
+
+La identidad de servidor se valida ahora con los claims firmados de Supabase tanto en el proxy como al construir la sesión. Los permisos de administración de cuentas, asignación de roles, restablecimiento de contraseña y exportación se expresan en funciones puras compartidas y se prueban como matriz. PostgreSQL/RLS y las funciones de seguridad siguen siendo la autoridad final; no se modificaron reglas de negocio, migraciones ni datos versionados.
+
+Durante la verificación se corrigieron dos supuestos de Linux en el entorno alternativo de integración: la conversión de `import.meta.url` a una ruta de Windows y el transporte de Docker Desktop. El mismo script conserva el socket Unix fuera de Windows. Las pruebas se ejecutaron contra PostgreSQL, GoTrue, PostgREST y Storage reales en contenedores locales con datos exclusivamente ficticios; los contenedores quedaron detenidos y su estado local, ignorado por Git, se conserva para reutilización.
+
+| Comprobación                      | Resultado verificado en Windows                               |
+| --------------------------------- | ------------------------------------------------------------- |
+| `npm run verify`                  | PASS · formato, lint, tipos, unitarias y build de 15 rutas    |
+| `npm run test:e2e:access`         | PASS · acceso y protección en los 3 tamaños emulados          |
+| `node scripts/local-services.mjs` | PASS · servicios reales locales iniciados con Docker Desktop  |
+| `node scripts/local-migrate.mjs`  | PASS · 9 migraciones y seed ficticio                          |
+| `npm run test:integration`        | PASS · 23 comprobaciones de Auth, RLS, SQL y Storage          |
+| `npm run test:e2e`                | PASS · 12 recorridos en escritorio, Android e iPhone emulados |
+| `git diff --check`                | PASS                                                          |
+
+El servidor de desarrollo emitió avisos transitorios de streams abortados durante algunas navegaciones de Playwright; las respuestas esperadas se completaron y ningún recorrido falló. No se accedió a Supabase o Vercel administrados ni se realizó un despliegue.

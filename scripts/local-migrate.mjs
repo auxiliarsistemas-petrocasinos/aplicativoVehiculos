@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { readdir, readFile } from 'node:fs/promises';
 const args = [
-  '--host=unix:///var/run/docker.sock',
+  ...(process.platform === 'win32' ? [] : ['--host=unix:///var/run/docker.sock']),
   'exec',
   '-i',
   'vehicles-db',
