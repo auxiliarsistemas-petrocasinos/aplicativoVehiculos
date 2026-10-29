@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation';
 import { pageData } from '@/lib/page-data';
+import { getCurrentShift } from '@/lib/supabase/queries';
 import { serverClient } from '@/lib/supabase/server';
 import { Shell } from '@/components/shell';
 import { ShiftWorkflow, type WorkflowDraft } from '@/components/shift-workflow';
 export default async function ShiftPage() {
-  const data = await pageData();
+  const data = await pageData(getCurrentShift);
   if (data.profile.role !== 'driver') redirect('/turnos');
   const shift = data.shifts.find((s) => ['opening', 'active', 'closing'].includes(s.status));
   let draft: WorkflowDraft = {};
@@ -23,7 +24,7 @@ export default async function ShiftPage() {
             : 'opening',
       )
       .maybeSingle();
-    draft = rows?.data ?? {};
+    draft = (rows?.data ?? {}) as WorkflowDraft;
   }
   return (
     <Shell profile={data.profile}>

@@ -25,7 +25,11 @@
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
     "bootstrap": "node --env-file=.env.local scripts/bootstrap.mjs",
-    "seed:demo": "node --env-file=.env.local scripts/seed-demo.mjs"
+    "seed:demo": "node --env-file=.env.local scripts/seed-demo.mjs",
+    "seed:scale": "node --env-file=.env.local scripts/seed-scale.mjs",
+    "evidence:reconcile": "node --env-file=.env.local scripts/cleanup-evidence.mjs",
+    "types:generate": "supabase gen types typescript --db-url postgresql://postgres:local-test-only@127.0.0.1:54322/postgres --schema public > lib/database.types.ts && prettier --write lib/database.types.ts",
+    "types:check": "npm run types:generate && git diff --exit-code -- lib/database.types.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.0",

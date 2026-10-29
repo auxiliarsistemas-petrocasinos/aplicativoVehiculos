@@ -258,3 +258,29 @@ Durante la verificación se corrigieron dos supuestos de Linux en el entorno alt
 | `git diff --check`                | PASS                                                          |
 
 El servidor de desarrollo emitió avisos transitorios de streams abortados durante algunas navegaciones de Playwright; las respuestas esperadas se completaron y ningún recorrido falló. No se accedió a Supabase o Vercel administrados ni se realizó un despliegue.
+
+## Fundamento de seguridad y escalabilidad — 2026-10-29
+
+Se fusionó el PR #2 en develop después de comprobar que todos sus checks estaban aprobados. La
+rama de trabajo reemplaza la fotografía global por servicios acotados, transmite CSV por lotes,
+genera tipos de base de datos y agrega intenciones de carga, reconciliación, doble límite de acceso,
+índices justificados y políticas de retención desactivadas hasta aprobación.
+
+| Comprobación                       | Resultado                                                       |
+| ---------------------------------- | --------------------------------------------------------------- |
+| Migraciones desde base local       | PASS · 10 migraciones                                           |
+| Seed de escala                     | PASS · 30 campos sintéticos con conductores, vehículos y turnos |
+| Integración real                   | PASS · 24/24, incluido flujo firmado y cuota concurrente        |
+| Pruebas unitarias                  | PASS · 28/28                                                    |
+| E2E completo                       | PASS · 12/12; recorrido afectado repetido 3/3                   |
+| Supabase DB Advisors               | PASS · sin hallazgos después de optimizar cuatro políticas RLS  |
+| Reconciliación en simulación       | PASS · 0 vencidas, 0 objetos sueltos, 0 objetos faltantes       |
+| Supabase DB Lint                   | NO DISPONIBLE · la pila liviana no incluye plpgsql_check        |
+| Servicios administrados/producción | NO EJECUTADO · fuera de autorización                            |
+
+La primera ejecución E2E completa tuvo 8/12 aprobadas: los tres casos anónimos esperaban 403 y la
+API devolvía 400; se corrigió y la suite específica quedó 6/6. Un caso administrativo de escritorio
+agotó cinco segundos durante compilación en frío y el mismo flujo pasó en Android/iPhone; su espera
+se ajustó a diez segundos. La repetición completa quedó 11/12: el cierre en iPhone fue confirmado,
+pero la navegación tardó más de cinco segundos bajo carga. Se amplió únicamente esa espera a quince
+segundos y el recorrido completo afectado pasó 3/3 en escritorio, Android e iPhone.

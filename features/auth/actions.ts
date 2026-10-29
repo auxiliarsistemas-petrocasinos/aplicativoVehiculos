@@ -2,6 +2,7 @@
 import { createHmac, randomUUID } from 'node:crypto';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { adminClient } from '@/lib/supabase/admin';
 import { serverClient } from '@/lib/supabase/server';
@@ -16,13 +17,26 @@ export async function login(form: FormData) {
   try {
     if (!process.env.AUTH_RATE_LIMIT_SECRET)
       return { error: 'El acceso aún requiere configuración del servidor.' };
-    const key = createHmac('sha256', process.env.AUTH_RATE_LIMIT_SECRET)
-      .update(alias)
+    const requestHeaders = await headers();
+    // Solo Vercel garantiza que esta cabecera proviene de su proxy. En otros
+    // despliegues omitimos el bucket de red en vez de confiar en una cabecera
+    // que el cliente podría falsificar o agrupar en un valor global.
+    const networkSignal = process.env.VERCEL
+      ? requestHeaders.get('x-vercel-forwarded-for')?.split(',')[0]?.trim()
+      : undefined;
+    const identifierKey = createHmac('sha256', process.env.AUTH_RATE_LIMIT_SECRET)
+      .update(`identifier:${alias}`)
       .digest('hex');
+    const networkKey = networkSignal
+      ? createHmac('sha256', process.env.AUTH_RATE_LIMIT_SECRET)
+          .update(`network:${networkSignal}`)
+          .digest('hex')
+      : '';
     const admin = adminClient();
     const { data: email, error } = await admin.rpc('resolve_login', {
       alias_input: alias,
-      limit_key: key,
+      identifier_key: identifierKey,
+      network_key: networkKey,
     });
     const db = await serverClient();
     // Se realiza una verificación Auth también para alias inexistentes; nunca se devuelve correo/directorio.

@@ -1,8 +1,9 @@
 import { pageData } from '@/lib/page-data';
+import { getProfile } from '@/lib/supabase/queries';
 import { Shell, SignOutButton } from '@/components/shell';
 import { roleLabels } from '@/lib/types';
 export default async function Profile() {
-  const data = await pageData();
+  const data = await pageData(getProfile);
   const p = data.profile;
   return (
     <Shell profile={p}>

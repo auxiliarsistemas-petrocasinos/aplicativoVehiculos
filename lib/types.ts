@@ -111,6 +111,7 @@ export type Snapshot = {
   templateVersion: string;
   inspectionItems: InspectionItem[];
   vehicleStates: { vehicle_id: string; in_use: boolean; eligible: boolean }[];
+  nextCursor?: string;
 };
 export const roleLabels: Record<Role, string> = {
   driver: 'Conductor',

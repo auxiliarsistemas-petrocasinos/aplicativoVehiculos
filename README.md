@@ -10,6 +10,11 @@ Login por alias, contraseña visible/oculta, cambio inicial obligatorio en Auth/
 
 Consulta [entorno de desarrollo](docs/development.md), [guía de contribución](CONTRIBUTING.md), [preparación de Supabase/Vercel](docs/deployment.md), [resultados y límites](docs/verification.md), [formularios](docs/forms-specification.md), [decisiones](docs/decisions/001-implementation.md), [modelo y RLS](docs/data-model.md) e [indicadores](docs/analytics.md).
 
+El fundamento de los pasos 2–5 se documenta en [validación del producto](docs/product-validation.md),
+[línea base de rendimiento](docs/baseline-performance.md) y
+[seguridad y gobierno de datos](docs/security-data-governance.md). Las decisiones empresariales
+pendientes no se presentan como implementadas.
+
 ## Preparación estándar
 
 Requiere Node.js 24.22.1 y npm 11.19.1, declarados en `.nvmrc` y `package.json`. Docker solo es necesario para las pruebas con Supabase local.
@@ -26,10 +31,11 @@ Configura en `.env.local` la URL y clave publicable de Supabase local, `SUPABASE
 npm run db:reset
 npm run bootstrap
 npm run seed:demo
+npm run seed:scale
 npm run dev
 ```
 
-`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las nueve migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
+`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las diez migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
 
 Abrir `http://localhost:3000`. El despliegue de prueba en Supabase/Vercel fue autorizado el 12 de octubre de 2026; está pendiente de disponer de las conexiones y proyectos remotos. Ver `docs/deployment.md`.
 
@@ -65,6 +71,11 @@ npm run test:e2e
 ```
 
 `verify` ejecuta formato, lint, generación y verificación de tipos, pruebas unitarias y build de producción. `audit:prod` rechaza vulnerabilidades altas o críticas en dependencias que llegan a producción. El E2E de acceso no necesita Supabase y también se ejecuta en CI.
+
+Con la pila local activa, `types:generate` regenera `lib/database.types.ts` y
+`types:check` comprueba que el archivo versionado coincide. `evidence:reconcile` solo simula la
+reconciliación; `-- --apply` realiza cambios y permanece bloqueado para destinos remotos salvo
+autorización explícita.
 
 Integración requiere `.env.local` local, migraciones, seed, `DEMO_PASSWORD` y `TEST_PASSWORD` privadas; crea cuentas/vehículos ficticios aislados por ejecución. Comprueba Auth, permisos, SQL/RLS, Storage, evidencia, concurrencia, idempotencia y ciclo de turno. Nunca apuntar estos scripts a producción: rechazan destinos distintos de localhost.
 

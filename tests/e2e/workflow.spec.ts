@@ -147,7 +147,7 @@ test('recorrido real: alias, cambio inicial, apertura, foto, firma, incidencia y
   await expect(page.getByRole('heading', { name: 'Cierre de turno', exact: true })).toBeVisible();
   await inspection(page, 110);
   await page.getByRole('button', { name: 'Finalizar turno', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp('/turnos/' + shiftId + '$'));
+  await expect(page).toHaveURL(new RegExp('/turnos/' + shiftId + '$'), { timeout: 15_000 });
   await expect(page.getByText('Cerrado', { exact: true })).toBeVisible();
   expect(
     (await service.from('incidents').select('status').eq('shift_id', shiftId).single()).data

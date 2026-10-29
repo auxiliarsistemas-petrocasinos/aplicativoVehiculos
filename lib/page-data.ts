@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
 import { configured } from '@/lib/supabase/server';
 import { session } from '@/features/auth/session';
-import { getSnapshot } from '@/lib/supabase/queries';
-export async function pageData() {
+import type { Snapshot } from '@/lib/types';
+
+export async function pageData(loader: () => Promise<Snapshot>) {
   if (!configured()) redirect('/login');
   let current;
   try {
@@ -11,5 +12,5 @@ export async function pageData() {
     redirect('/login');
   }
   if (current.profile.must_change_password) redirect('/change-password');
-  return getSnapshot();
+  return loader();
 }

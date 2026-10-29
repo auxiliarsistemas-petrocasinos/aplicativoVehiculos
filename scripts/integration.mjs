@@ -33,7 +33,8 @@ const login = async (alias, password = process.env.DEMO_PASSWORD) => {
   const db = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, options);
   const { data: email, error } = await service.rpc('resolve_login', {
     alias_input: alias,
-    limit_key: randomUUID(),
+    identifier_key: randomUUID(),
+    network_key: randomUUID(),
   });
   ok({ data: email, error });
   const r = await db.auth.signInWithPassword({ email, password });
@@ -284,16 +285,29 @@ const png = Buffer.from(
   'base64',
 );
 async function evidence(user, shift, kind = 'photo', beforeRegister) {
-  const id = randomUUID();
-  const path = `${user.id}/${shift}/${id}`;
-  ok(
-    await user.db.storage
-      .from('evidence')
-      .upload(path, png, { contentType: 'image/png', upsert: false }),
+  const intent = ok(
+    await user.db.rpc('create_evidence_upload_intent', {
+      shift_id_input: shift,
+      kind_input: kind,
+      mime_type_input: 'image/png',
+      expected_bytes_input: png.length,
+    }),
+  )[0];
+  const signed = ok(
+    await user.db.storage.from('evidence').createSignedUploadUrl(intent.path, { upsert: false }),
   );
-  if (beforeRegister) await beforeRegister(path);
-  ok(await command(user.db, 'register_evidence', { shift_id: shift, id, path, kind }));
-  return { id, path };
+  ok(
+    await user.db.storage.from('evidence').uploadToSignedUrl(intent.path, signed.token, png, {
+      contentType: 'image/png',
+      upsert: false,
+    }),
+  );
+  if (beforeRegister) await beforeRegister(intent.path);
+  const id = ok(
+    await user.db.rpc('finalize_evidence_upload_intent', { intent_id_input: intent.id }),
+  );
+  assert.equal(id, intent.id);
+  return { id, path: intent.path };
 }
 const assessment = Object.fromEntries(catalog.fatigue.map((q) => [q.id, false]));
 const inspection = (type, km, signature) => ({
@@ -699,15 +713,54 @@ await test('Campos, traslado sin uso y correcciones conservan historial', async 
   );
 });
 await test('Resolución de alias limita intentos sin publicar directorio', async () => {
-  const limit_key = randomUUID();
+  const identifier_key = randomUUID();
+  const network_key = randomUUID();
   for (let n = 0; n < 10; n++)
-    assert.ok(ok(await service.rpc('resolve_login', { alias_input: driver.alias, limit_key })));
+    assert.ok(
+      ok(
+        await service.rpc('resolve_login', {
+          alias_input: driver.alias,
+          identifier_key,
+          network_key,
+        }),
+      ),
+    );
   assert.equal(
-    ok(await service.rpc('resolve_login', { alias_input: driver.alias, limit_key })),
+    ok(
+      await service.rpc('resolve_login', {
+        alias_input: driver.alias,
+        identifier_key,
+        network_key,
+      }),
+    ),
     null,
   );
   denied(
-    await driver.db.rpc('resolve_login', { alias_input: driver.alias, limit_key: randomUUID() }),
+    await driver.db.rpc('resolve_login', {
+      alias_input: driver.alias,
+      identifier_key: randomUUID(),
+      network_key: randomUUID(),
+    }),
+  );
+});
+await test('Cuota de intenciones permanece atómica bajo concurrencia', async () => {
+  const quotaShift = ok(await command(driver.db, 'start_shift')).id;
+  const attempts = await Promise.all(
+    Array.from({ length: 60 }, () =>
+      driver.db.rpc('create_evidence_upload_intent', {
+        shift_id_input: quotaShift,
+        kind_input: 'photo',
+        mime_type_input: 'image/png',
+        expected_bytes_input: 1,
+      }),
+    ),
+  );
+  assert.equal(attempts.filter((attempt) => !attempt.error).length, 50);
+  ok(
+    await command(admin.db, 'regularize', {
+      shift_id: quotaShift,
+      reason: 'Finalización de prueba concurrente de cuota',
+    }),
   );
 });
 await test('Auditoría técnica existe y no incluye respuestas de fatiga', async () => {

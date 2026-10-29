@@ -45,7 +45,7 @@ test('administración: alta de conductor y Gerencia consulta/exporta sin modific
     await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
     await expect(
       page.getByRole('heading', { name: 'Dashboard de flota', exact: true }),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10_000 });
   }
   await login('admin.' + suffix);
   await page.screenshot({

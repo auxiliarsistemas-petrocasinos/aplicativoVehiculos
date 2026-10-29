@@ -6,7 +6,7 @@ El usuario autorizó el despliegue de prueba el 12 de octubre de 2026. El códig
 
 ## Preparación realizada
 
-La carga binaria de fotografías y firmas se realiza directamente desde el navegador a Supabase Storage con el JWT del conductor. La aplicación recibe únicamente un recibo JSON pequeño, para evitar el límite de tamaño de peticiones de Vercel Functions. El servidor descarga la carga privada usando la identidad del conductor, valida tamaño, MIME y cabecera binaria y registra la evidencia mediante RPC idempotente. No se expone la clave de servicio ni se confirma una imagen por el solo éxito de su subida.
+La carga binaria de fotografías y firmas se realiza directamente desde el navegador a Supabase Storage mediante una URL firmada de un solo uso. La identidad del conductor crea antes una intención acotada en el servidor. La aplicación recibe únicamente recibos JSON pequeños, para evitar el límite de tamaño de peticiones de Vercel Functions. El servidor descarga la carga privada, valida tamaño, MIME y cabecera binaria y finaliza la evidencia mediante RPC idempotente. No se expone la clave de servicio ni se confirma una imagen por el solo éxito de su subida.
 
 La novena migración, `202610120001_staged_evidence.sql`, permite leer una carga todavía no asociada únicamente a su propietario durante su turno operativo. Gerencia, administradores, otros conductores y `anon` no obtienen lectura de estos archivos. Las reglas de lectura histórica siguen vigentes. Un error anterior al registro puede dejar un objeto sin metadatos: la reconciliación de estos objetos continúa pendiente y no se declara resuelta.
 
@@ -31,7 +31,7 @@ npx supabase link --project-ref IDENTIFICADOR_DEL_PROYECTO
 npx supabase db push --linked
 ```
 
-Aplicar las nueve migraciones en orden. El bucket privado `evidence`, su límite de 8 MB, los MIME admitidos y las políticas se crean mediante migraciones. Verificar los permisos reales sobre `auth.users`, el trigger de cambio de contraseña, las tablas de sesiones y Storage en el servicio administrado; las pruebas locales no certifican esos permisos remotos.
+Aplicar las diez migraciones en orden. El bucket privado `evidence`, su límite de 8 MB, los MIME admitidos y las políticas se crean mediante migraciones. Verificar los permisos reales sobre `auth.users`, el trigger de cambio de contraseña, las tablas de sesiones y Storage en el servicio administrado; las pruebas locales no certifican esos permisos remotos.
 
 Deshabilitar registro público y cuentas anónimas; usar contraseña mínima de 12 caracteres. Configurar Site URL y redirect URLs para el dominio exacto de pruebas. Mantener el restablecimiento administrativo y revisar los endpoints alternativos de recuperación del proveedor; no asumir que ocultar una opción en la UI los deshabilita.
 

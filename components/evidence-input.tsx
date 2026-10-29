@@ -8,22 +8,31 @@ export async function uploadEvidence(file: File, shiftId: string, kind = 'photo'
   const validation = photoError(file);
   if (validation) throw new Error(validation);
   const db = browserClient();
-  const {
-    data: { user },
-    error: userError,
-  } = await db.auth.getUser();
-  if (userError || !user) throw new Error('Inicia sesión nuevamente para guardar la evidencia.');
-  const id = crypto.randomUUID();
-  const path = `${user.id}/${shiftId}/${id}`;
-  const { error: uploadError } = await db.storage.from('evidence').upload(path, file, {
-    contentType: file.type,
-    upsert: false,
+  const initiation = await fetch('/api/evidence', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'initiate',
+      shift_id: shiftId,
+      kind,
+      mime_type: file.type,
+      bytes: file.size,
+    }),
   });
+  const authorized = await initiation.json();
+  if (!initiation.ok || !authorized.intent_id || !authorized.path || !authorized.token)
+    throw new Error(authorized.error ?? 'No se autorizó la carga.');
+  const { error: uploadError } = await db.storage
+    .from('evidence')
+    .uploadToSignedUrl(authorized.path, authorized.token, file, {
+      contentType: file.type,
+      upsert: false,
+    });
   if (uploadError) throw new Error('No se confirmó la carga. Conserva el archivo y reintenta.');
   const response = await fetch('/api/evidence', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, shift_id: shiftId, kind }),
+    body: JSON.stringify({ action: 'complete', intent_id: authorized.intent_id }),
   });
   const body = await response.json();
   if (!response.ok || !body.id) throw new Error(body.error ?? 'No se confirmó la carga.');

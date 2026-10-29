@@ -1,15 +1,16 @@
 import { redirect } from 'next/navigation';
 import { pageData } from '@/lib/page-data';
+import { listDrivers } from '@/lib/supabase/queries';
 import { serverClient } from '@/lib/supabase/server';
 import { Shell } from '@/components/shell';
 import { dateLabel } from '@/lib/utils';
 export default async function Audit() {
-  const data = await pageData();
+  const data = await pageData(listDrivers);
   if (data.profile.role !== 'it_superadmin') redirect('/');
   const db = await serverClient();
   const { data: events, error } = await db
     .from('audit_events')
-    .select('*')
+    .select('id,actor_id,action,entity_id,created_at')
     .order('created_at', { ascending: false })
     .limit(200);
   if (error) throw new Error('No se pudo consultar la auditoría');

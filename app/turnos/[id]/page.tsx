@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Truck, ArrowLeft, ClipboardCheck } from 'lucide-react';
 import { pageData } from '@/lib/page-data';
+import { getShiftDetail } from '@/lib/supabase/queries';
 import { serverClient } from '@/lib/supabase/server';
 import { Shell } from '@/components/shell';
 import { CommandForm } from '@/components/command-form';
@@ -11,16 +12,25 @@ import { dateLabel } from '@/lib/utils';
 import { statusLabels } from '@/lib/types';
 import { eligibleVehicles } from '@/features/vehicles/eligibility';
 export default async function ShiftDetail({ params }: { params: Promise<{ id: string }> }) {
-  const data = await pageData();
   const { id } = await params;
+  const data = await pageData(() => getShiftDetail(id));
   const shift = data.shifts.find((s) => s.id === id);
   if (!shift) notFound();
   const db = await serverClient();
   const results = await Promise.all([
-    db.from('inspections').select('*,inspection_answers(*)').eq('shift_id', id),
-    db.from('evidences').select('*').eq('shift_id', id),
-    db.from('odometer_corrections').select('*'),
-    db.from('form_items').select('id,label,template_id'),
+    db
+      .from('inspections')
+      .select(
+        'id,usage_id,kind,created_at,signature_id,template_id,inspection_answers(item_id,rating,observation)',
+      )
+      .eq('shift_id', id)
+      .limit(200),
+    db.from('evidences').select('id,entity_id,item_id').eq('shift_id', id).limit(200),
+    db
+      .from('odometer_corrections')
+      .select('id,usage_id,reading,original_value,corrected_value,reason')
+      .limit(200),
+    db.from('form_items').select('id,label,template_id').limit(200),
   ]);
   if (results.some((r) => r.error)) throw new Error('No fue posible consultar el detalle.');
   const inspections = results[0].data ?? [];

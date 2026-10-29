@@ -25,10 +25,11 @@ for (const name of (await readdir('supabase/migrations'))
   });
   console.log('Aplicada ' + name);
 }
-execFileSync('docker', args, {
-  input: await readFile('supabase/seed.sql'),
-  stdio: ['pipe', 'pipe', 'pipe'],
-});
+if (!process.env.SKIP_SEED)
+  execFileSync('docker', args, {
+    input: await readFile('supabase/seed.sql'),
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
 execFileSync('docker', args, {
   input:
     "grant select,insert,update,delete on storage.objects to authenticated; grant select on storage.buckets to authenticated; grant all on all tables in schema public to service_role; grant all on all sequences in schema public to service_role; NOTIFY pgrst, 'reload schema';",

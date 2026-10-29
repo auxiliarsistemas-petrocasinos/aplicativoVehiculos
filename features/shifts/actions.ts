@@ -5,6 +5,7 @@ import { session } from '@/features/auth/session';
 import { inspectionSchema } from '@/features/inspections/validation';
 import { incidentSchema } from '@/features/incidents/validation';
 import { fieldSchema } from '@/features/fields/validation';
+import type { Json } from '@/lib/database.types';
 const requestSchema = z.object({
   action: z.string().max(80),
   payload: z.record(z.string(), z.unknown()),
@@ -24,7 +25,7 @@ export async function execute(input: unknown): Promise<{ id?: string; error?: st
     if (action === 'report_incident') incidentSchema.parse(payload);
     const { data, error } = await db.rpc('execute_command', {
       action,
-      payload,
+      payload: payload as Json,
       request_id: requestId,
     });
     if (error)
@@ -37,7 +38,7 @@ export async function execute(input: unknown): Promise<{ id?: string; error?: st
               : 'No se pudo confirmar la operación. Revisa los datos y reintenta con el mismo formulario.',
       };
     revalidatePath('/');
-    return { id: data.id };
+    return { id: (data as { id?: string } | null)?.id };
   } catch (error) {
     return {
       error:
@@ -50,7 +51,11 @@ export async function execute(input: unknown): Promise<{ id?: string; error?: st
 export async function saveDraft(shiftId: string, kind: string, data: Record<string, unknown>) {
   try {
     const { db } = await session();
-    const { error } = await db.rpc('save_draft', { shift_id: shiftId, kind, data });
+    const { error } = await db.rpc('save_draft', {
+      shift_id: shiftId,
+      kind,
+      data: data as Json,
+    });
     return error
       ? { error: 'No se confirmó el borrador. Mantén abierto el formulario y reintenta.' }
       : { ok: true };
