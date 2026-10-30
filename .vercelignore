@@ -1,0 +1,13 @@
+.env*
+.local/
+.next/
+node_modules/
+playwright-report/
+test-results/
+supabase/.temp/
+supabase/.branches/
+docs/reference/
+*.docx
+*.xlsx
+*.pdf
+*.bundle

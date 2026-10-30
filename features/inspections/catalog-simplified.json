@@ -1,0 +1,233 @@
+{
+  "version": "demo-2026.10.2-simplificado",
+  "status": "demo_only",
+  "fatigue": [
+    {
+      "id": "F09-1",
+      "label": "Las horas de conducción no superan las 12 horas?",
+      "sources": ["F09-1"]
+    },
+    {
+      "id": "F09-2",
+      "label": "Ha ingerido medicamentos duarante las horas previas a conducir que induzcan el sueño",
+      "sources": ["F09-2"]
+    },
+    { "id": "F09-3", "label": "se siente enfermo?", "sources": ["F09-3"] },
+    {
+      "id": "F09-4",
+      "label": "Se siente en condiciones para conducir a su destino?",
+      "sources": ["F09-4"]
+    },
+    { "id": "F09-5", "label": "Ha dormido lo sufiente?", "sources": ["F09-5"] },
+    {
+      "id": "F09-6",
+      "label": "en caso de sentir sueño sabe lo que tiene que hacer?",
+      "sources": ["F09-6"]
+    }
+  ],
+  "inspection": [
+    {
+      "id": "SIM-01",
+      "label": "¿La carrocería, los vidrios y los espejos están en buen estado?",
+      "category": "Exterior",
+      "vehicleType": "both",
+      "sources": ["PER-1-01", "F20-35", "F20-36"]
+    },
+    {
+      "id": "SIM-02",
+      "label": "¿Hay golpes o daños nuevos que deban reportarse?",
+      "category": "Exterior",
+      "vehicleType": "both",
+      "sources": ["F20-37", "PER-2-05"]
+    },
+    {
+      "id": "SIM-03",
+      "label": "¿Se observan fugas de aceite, combustible, refrigerante u otros líquidos?",
+      "category": "Fugas",
+      "vehicleType": "both",
+      "sources": ["PER-1-10", "PER-2-08"]
+    },
+    {
+      "id": "SIM-04",
+      "label": "¿Las llantas tienen presión y desgaste visual adecuados?",
+      "category": "Llantas",
+      "vehicleType": "both",
+      "sources": ["F20-18", "F20-19", "PER-1-04", "PER-2-04"]
+    },
+    {
+      "id": "SIM-05",
+      "label": "¿Las llantas están libres de cortes, protuberancias o daños graves?",
+      "category": "Llantas",
+      "vehicleType": "both",
+      "sources": ["F20-18", "F20-19", "PER-1-04", "PER-2-04"]
+    },
+    {
+      "id": "SIM-06",
+      "label": "¿Las ruedas y sus tuercas están aparentemente completas y en buen estado?",
+      "category": "Llantas",
+      "vehicleType": "both",
+      "sources": ["F20-18", "F20-19", "PER-2-04"]
+    },
+    {
+      "id": "SIM-07",
+      "label": "¿Funcionan las luces delanteras, direccionales y estacionarias?",
+      "category": "Luces",
+      "vehicleType": "both",
+      "sources": ["F20-12", "F20-13", "F20-15", "F20-16"]
+    },
+    {
+      "id": "SIM-08",
+      "label": "¿Funcionan las luces de freno y reversa, y la alarma de reversa si aplica?",
+      "category": "Luces",
+      "vehicleType": "both",
+      "sources": ["F20-14", "F20-17", "F20-30"]
+    },
+    {
+      "id": "SIM-09",
+      "label": "¿El motor enciende y funciona sin ruidos, vibraciones o humo anormal?",
+      "category": "Motor",
+      "vehicleType": "both",
+      "sources": ["PER-1-16", "PER-1-20", "PER-2-14"]
+    },
+    {
+      "id": "SIM-10",
+      "label": "¿Los niveles de aceite y refrigerante son adecuados, según el procedimiento seguro de revisión?",
+      "category": "Motor",
+      "vehicleType": "both",
+      "sources": ["F20-27", "F20-28", "PER-2-06"]
+    },
+    {
+      "id": "SIM-11",
+      "label": "¿El tablero está libre de testigos de advertencia que indiquen una falla?",
+      "category": "Tablero",
+      "vehicleType": "both",
+      "sources": ["F20-31", "PER-1-11"]
+    },
+    {
+      "id": "SIM-12",
+      "label": "¿El pedal del freno y el freno de estacionamiento responden normalmente?",
+      "category": "Frenos",
+      "vehicleType": "both",
+      "sources": ["F20-32", "PER-1-14", "PER-1-17", "PER-2-12"]
+    },
+    {
+      "id": "SIM-13",
+      "label": "¿La dirección responde normalmente, sin dureza ni juego anormal?",
+      "category": "Dirección",
+      "vehicleType": "both",
+      "sources": ["PER-1-18", "PER-2-13"]
+    },
+    {
+      "id": "SIM-14",
+      "label": "¿El embrague y los cambios funcionan correctamente, si aplica?",
+      "category": "Conducción",
+      "vehicleType": "both",
+      "sources": ["F20-29", "PER-1-19"]
+    },
+    {
+      "id": "SIM-15",
+      "label": "¿Se perciben ruidos, vibraciones o comportamientos anormales al mover el vehículo?",
+      "category": "Conducción",
+      "vehicleType": "both",
+      "sources": ["PER-1-20", "PER-2-14"]
+    },
+    {
+      "id": "SIM-16",
+      "label": "¿El parabrisas y los vidrios permiten una buena visibilidad?",
+      "category": "Visibilidad",
+      "vehicleType": "both",
+      "sources": ["PER-1-01", "F20-36"]
+    },
+    {
+      "id": "SIM-17",
+      "label": "¿Funcionan los limpiaparabrisas y el sistema de lavado?",
+      "category": "Visibilidad",
+      "vehicleType": "both",
+      "sources": ["F20-23", "PER-1-13"]
+    },
+    {
+      "id": "SIM-18",
+      "label": "¿Funcionan el cinturón de seguridad y la bocina?",
+      "category": "Cabina",
+      "vehicleType": "both",
+      "sources": ["F20-30", "F20-40", "PER-1-12", "PER-1-13"]
+    },
+    {
+      "id": "SIM-19",
+      "label": "¿El asiento y los controles del conductor están en condiciones adecuadas?",
+      "category": "Cabina",
+      "vehicleType": "both",
+      "sources": ["F20-34", "F20-41"]
+    },
+    {
+      "id": "SIM-20",
+      "label": "¿El extintor está vigente, asegurado y accesible, cuando aplica?",
+      "category": "Seguridad",
+      "vehicleType": "both",
+      "sources": ["PER-1-15", "F17-L37"]
+    },
+    {
+      "id": "SIM-21",
+      "label": "¿Están disponibles las señales de carretera, el botiquín y los elementos de emergencia requeridos?",
+      "category": "Seguridad",
+      "vehicleType": "both",
+      "sources": ["F20-06", "F20-07", "F20-08", "F20-09", "PER-1-15"]
+    },
+    {
+      "id": "SIM-22",
+      "label": "¿Están disponibles el gato, la herramienta para cambio de llanta y los elementos requeridos?",
+      "category": "Herramientas",
+      "vehicleType": "both",
+      "sources": ["F20-10", "F20-11", "F20-21", "F20-22"]
+    },
+    {
+      "id": "SIM-23",
+      "label": "¿La documentación obligatoria del vehículo está vigente y disponible?",
+      "category": "Documentos",
+      "vehicleType": "both",
+      "sources": ["F20-01", "F20-02", "F20-03", "F20-04", "F20-05"]
+    },
+    {
+      "id": "SIM-24",
+      "label": "¿Las placas están instaladas y son legibles?",
+      "category": "Identificación",
+      "vehicleType": "both",
+      "sources": ["PER-1-02", "F20-PLACA"]
+    },
+    {
+      "id": "SIM-25",
+      "label": "¿El vehículo está en condiciones visibles adecuadas para iniciar la operación?",
+      "category": "Observación general",
+      "vehicleType": "both",
+      "sources": ["PER-1-16", "PER-2-16"]
+    },
+    {
+      "id": "SIM-26",
+      "label": "¿El furgón, la plataforma y sus puertas o cierres están asegurados y en buen estado?",
+      "category": "Carrocería de carga",
+      "vehicleType": "heavy",
+      "sources": ["PER-2-01", "F17-B26"]
+    },
+    {
+      "id": "SIM-27",
+      "label": "¿La carga está distribuida y asegurada, cuando el vehículo sale cargado?",
+      "category": "Carga",
+      "vehicleType": "heavy",
+      "sources": ["PER-2-01"]
+    },
+    {
+      "id": "SIM-28",
+      "label": "¿Los frenos de aire, el sistema hidráulico u otros equipos especiales funcionan correctamente, si aplica?",
+      "category": "Sistema especial",
+      "vehicleType": "heavy",
+      "sources": ["PER-2-11", "PER-2-13"]
+    },
+    {
+      "id": "SIM-29",
+      "label": "¿Las llantas corresponden a la configuración autorizada del vehículo?",
+      "category": "Configuración de llantas",
+      "vehicleType": "heavy",
+      "sources": ["PER-2-04"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+node_modules
+.next
+.local
+playwright-report
+test-results
+package-lock.json
+/supabase/
+AGENTS.md
+docs/architecture.md
+docs/requirements.md
