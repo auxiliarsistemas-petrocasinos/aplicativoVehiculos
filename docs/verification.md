@@ -258,6 +258,7 @@ Durante la verificación se corrigieron dos supuestos de Linux en el entorno alt
 | `git diff --check`                | PASS                                                          |
 
 El servidor de desarrollo emitió avisos transitorios de streams abortados durante algunas navegaciones de Playwright; las respuestas esperadas se completaron y ningún recorrido falló. No se accedió a Supabase o Vercel administrados ni se realizó un despliegue.
+
 ## Fundamento de seguridad y escalabilidad — 2026-10-29
 
 Se fusionó el PR #2 en develop después de comprobar que todos sus checks estaban aprobados. La
