@@ -1,10 +1,12 @@
-# Especificación digital de formularios — demo-2026.10.1
+# Especificación digital de formularios — demo-2026.10.2 simplificado
 
 Estado: **catálogo de demostración pendiente de ratificación PESV; no oficial**. Los cinco adjuntos se abrieron y leyeron con openpyxl, python-docx y pypdf; se inspeccionó visualmente la página 2 del PDF. Solo se conservan preguntas, controles y etiquetas. Originales y extracciones fuera del repositorio.
 
+La plantilla vigente de demostración contiene 25 controles comunes y cuatro adicionales para vehículos pesados. La versión `demo-2026.10.1`, con 56 controles, se conserva retirada para trazabilidad de inspecciones históricas.
+
 ## Reglas y discrepancias
 
-- Dos formularios: A estado del conductor (6 respuestas Sí/No en apertura); B inspección de recepción/entrega (Bueno/Regular/Malo/No aplica). Recepción y entrega son registros independientes.
+- Dos formularios: A estado del conductor (6 respuestas Sí/No en apertura); B inspección simplificada de recepción/entrega (25 controles livianos y 29 pesados, con Bueno/Regular/Malo/No aplica). Recepción y entrega son registros independientes.
 - Todos los controles operativos del catálogo de demo requieren respuesta. Regular/Malo exige observación y fotografía persistida. Esta obligatoriedad de demo **no equivale** a aprobación del catálogo diario oficial.
 - GA FO 09 versión 00: seis preguntas fieles, incluidos errores ortográficos del original. El encabezado restringe a livianos; el flujo aprobado solicita autoevaluación para cada conductor. No se calculan puntajes ni aptitud médica. Sus respuestas solo son legibles por su autor.
 - GA FO 20: tabla/página 1 versión 03; tabla/página 2 versión 02. Fuente de preguntas, sin activos ni datos diligenciados. Requisitos v0.3 excluía el Word por datos reales: el prompt de esta tarea autoriza estudiarlo, por eso se extraen únicamente etiquetas saneadas. No se importa como documento ni como política oficial.
@@ -14,7 +16,15 @@ Estado: **catálogo de demostración pendiente de ratificación PESV; no oficial
 - Los documentos legales de GA FO 20 se administran aparte con exigibilidad explícita; no reciben una calificación «Bueno» que sustituya vigencia. Catálogo legal aplicable pendiente. Un documento registrado como obligatorio y vencido impide una nueva recepción.
 - Faltan criterios críticos, actuación ante fatiga, periodicidades, tratamiento/retención de datos, reglas oficiales por tipo y aprobación del consolidado. La aplicación está limitada a demostración ficticia.
 
-## Catálogo implementado y correspondencia
+## Catálogo simplificado vigente
+
+Los controles `SIM-01` a `SIM-25` se muestran a todos los vehículos. Los controles `SIM-26` a `SIM-29` se muestran solo a vehículos pesados. Los enunciados proceden del banco simplificado facilitado para esta reforma y cada control conserva referencias al inventario saneado anterior en `features/inspections/catalog-simplified.json`.
+
+Las condiciones que dependen de equipamiento o carga se responden con No aplica cuando no correspondan. La aplicación aún no modela caja mecánica, estado de carga ni sistemas especiales como atributos independientes del vehículo.
+
+La documentación obligatoria continúa validándose además mediante el registro administrativo de documentos; la respuesta de la inspección no reemplaza esa vigencia ni habilita el vehículo.
+
+## Catálogo anterior y correspondencia
 
 Cada ID consolidado conserva sus fuentes en `features/inspections/catalog.json`, usado para generar la migración versionada. No se borran controles por coincidencia aproximada. Las agrupaciones de luces, espejos y llantas del peritaje se vinculan a controles detallados de GA FO 20; todos los controles detallados permanecen.
 

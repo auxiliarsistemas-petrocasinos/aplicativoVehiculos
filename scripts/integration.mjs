@@ -8,7 +8,7 @@ if (!url || !['127.0.0.1', 'localhost'].includes(new URL(url).hostname))
 const options = { auth: { persistSession: false, autoRefreshToken: false } };
 const service = createClient(url, process.env.SUPABASE_SECRET_KEY, options);
 const anon = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, options);
-const catalog = JSON.parse(await readFile('features/inspections/catalog.json', 'utf8'));
+const catalog = JSON.parse(await readFile('features/inspections/catalog-simplified.json', 'utf8'));
 const results = [];
 async function test(name, fn) {
   try {
@@ -58,7 +58,7 @@ const prepare = async (alias) => {
 let driver, second, admin, manager, it;
 const fieldA = '20000000-0000-4000-8000-000000000001';
 const fieldB = '20000000-0000-4000-8000-000000000002';
-const template = '10000000-0000-4000-8000-000000000001';
+const template = '10000000-0000-4000-8000-000000000002';
 const prefix = 'prueba' + randomUUID().replace(/[^a-f]/g, '');
 for (const [suffix, role, field_id] of [
   ['conductor', 'driver', fieldA],

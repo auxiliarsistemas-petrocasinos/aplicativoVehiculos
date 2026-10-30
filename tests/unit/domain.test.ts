@@ -3,7 +3,8 @@ import { normalizeAlias, suggestAlias } from '@/features/auth/alias';
 import { answerSchema, photoError } from '@/features/inspections/validation';
 import { incidentSchema } from '@/features/incidents/validation';
 import { csvCell, metrics, shiftsCsv } from '@/features/analytics/metrics';
-import catalog from '@/features/inspections/catalog.json';
+import catalog from '@/features/inspections/catalog-simplified.json';
+import sourceCatalog from '@/features/inspections/catalog.json';
 import type { Snapshot } from '@/lib/types';
 const id = '00000000-0000-4000-8000-000000000001';
 describe('Alias confirmados', () => {
@@ -63,13 +64,21 @@ describe('Catálogo trazable', () => {
     expect(catalog.status).toBe('demo_only');
   });
   it('cada control tiene fuente válida e ID único', () => {
-    const refs = new Set(catalog.sources.map((s) => s.id));
+    const refs = new Set(sourceCatalog.sources.map((s) => s.id));
     expect(new Set(catalog.inspection.map((i) => i.id)).size).toBe(catalog.inspection.length);
     for (const item of catalog.inspection)
       for (const source of item.sources) expect(refs.has(source)).toBe(true);
   });
   it('no promueve controles periódicos exclusivos a diarios', () =>
     expect(catalog.inspection.some((i) => i.id.startsWith('F17-'))).toBe(false));
+  it('reduce la inspección a 25 controles livianos y 29 pesados', () => {
+    const count = (vehicleType: 'light' | 'heavy') =>
+      catalog.inspection.filter(
+        (item) => item.vehicleType === 'both' || item.vehicleType === vehicleType,
+      ).length;
+    expect(count('light')).toBe(25);
+    expect(count('heavy')).toBe(29);
+  });
 });
 describe('Indicadores y exportación', () => {
   it('neutraliza fórmulas CSV y escapa comillas', () => {

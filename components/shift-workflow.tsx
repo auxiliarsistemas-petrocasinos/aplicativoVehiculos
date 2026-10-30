@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Clock3, Check, Save, Truck, TriangleAlert } from
 import type { InspectionInput, Snapshot } from '@/lib/types';
 import { statusLabels } from '@/lib/types';
 import { dateLabel } from '@/lib/utils';
-import catalog from '@/features/inspections/catalog.json';
+import catalog from '@/features/inspections/catalog-simplified.json';
 import { inspectionSchema } from '@/features/inspections/validation';
 import { eligibleVehicles } from '@/features/vehicles/eligibility';
 import { saveDraft } from '@/features/shifts/actions';
@@ -39,14 +39,28 @@ export function ShiftWorkflow({ data, draft = {} }: { data: Snapshot; draft?: Wo
   const [assessment, setAssessment] = useState<Record<string, boolean>>(draft.assessment ?? {});
   const selected = data.vehicles.find((v) => v.id === vehicleId);
   const [inspection, setInspection] = useState<InspectionInput | undefined>(
-    draft.inspection ?? (vehicle ? initialInspection(vehicle, data.templateId) : undefined),
+    draft.inspection?.template_id === data.templateId
+      ? draft.inspection
+      : vehicle
+        ? initialInspection(vehicle, data.templateId)
+        : selected
+          ? initialInspection(selected, data.templateId)
+          : undefined,
   );
   const [changing, setChanging] = useState(draft.changing ?? false);
   const [delivery, setDelivery] = useState<InspectionInput | undefined>(
-    draft.delivery ?? (vehicle ? initialInspection(vehicle, data.templateId) : undefined),
+    draft.delivery?.template_id === data.templateId
+      ? draft.delivery
+      : vehicle
+        ? initialInspection(vehicle, data.templateId)
+        : undefined,
   );
   const [reception, setReception] = useState<InspectionInput | undefined>(
-    draft.reception ?? (replacement ? initialInspection(replacement, data.templateId) : undefined),
+    draft.reception?.template_id === data.templateId
+      ? draft.reception
+      : replacement
+        ? initialInspection(replacement, data.templateId)
+        : undefined,
   );
   const [saved, setSaved] = useState('');
   const [saving, setSaving] = useState(false);

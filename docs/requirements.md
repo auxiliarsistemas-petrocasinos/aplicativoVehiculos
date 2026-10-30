@@ -149,6 +149,10 @@ Una incidencia pendiente no bloquea estos pasos. Cerrar la aplicación o cerrar 
 
 **CONFIRMADO:** en cualquier ítem de inspección marcado **Regular** o **Malo**, son **obligatorias tanto una observación como una fotografía**. La escala propuesta del formulario vehicular es Bueno / Regular / Malo / No aplica. La recepción y la entrega son registros independientes; no se sobrescriben respuestas históricas. Los controles se adaptarán a vehículo liviano/pesado.
 
+**CONFIRMADO PARA LA DEMOSTRACIÓN:** la plantilla diaria se simplifica a 25 controles para vehículos livianos y 29 para vehículos pesados. Las seis preguntas de estado del conductor se mantienen únicamente en la apertura. La misma plantilla vehicular simplificada se usa en recepción y entrega.
+
+**PENDIENTE:** ratificación del banco simplificado por PESV, Flota y SST. La propuesta documental de sustituir la escala por En buen estado / Presenta novedad / No aplica, capturar severidad o impacto en seguridad y hacer opcional la fotografía no reemplaza todavía las reglas aprobadas de Bueno / Regular / Malo / No aplica ni la evidencia obligatoria para Regular/Malo.
+
 **FUENTE DOCUMENTAL:** `GA FO 13 Control Kilometraje y Combustible PESV.xlsx` contiene kilometraje inicial/final e información de tanqueos; se utilizará como referencia para las lecturas y un eventual registro operativo de combustible, sin convertir cada tanqueo en requisito de apertura/cierre hasta definir ese flujo.
 
 **PROPUESTO:** registrar fecha/hora del servidor, cuenta autenticada, tipo y versión del checklist, evidencias privadas almacenadas, referencias al vehículo y turno; validar peso/tipo de las fotografías. Las imágenes deben quedar persistidas antes de confirmar una inspección o incidencia.

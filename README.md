@@ -89,6 +89,6 @@ No usar la clave de servicio en el navegador. No habilitar signup público ni re
 
 La clave privilegiada solo sirve a cuentas y scripts técnicos. Las acciones de flota, los informes y Storage usan identidad del usuario y RLS. Los registros confirmados no se editan. Regularizar no libera la unidad. La corrección de odómetro es una actuación nueva visible junto al original; su aplicación a indicadores queda pendiente. El borrador requiere guardado explícito en servidor. No hay GPS, sincronización offline ni módulo integral de combustible/mantenimiento.
 
-No se versionan documentos originales, extracciones, credenciales ni datos reales. El catálogo digital tiene 245 referencias saneadas, seis preguntas de fatiga y 56 controles de inspección; requiere ratificación PESV. Los originales solo estuvieron en el directorio de adjuntos, fuera del repositorio.
+No se versionan documentos originales, extracciones, credenciales ni datos reales. El catálogo digital conserva 245 referencias saneadas, seis preguntas de fatiga y una plantilla simplificada de 25 controles para livianos y 29 para pesados; requiere ratificación PESV. La plantilla anterior de 56 controles queda retirada para conservar la trazabilidad histórica. Los originales solo estuvieron en el directorio de adjuntos, fuera del repositorio.
 
 El trabajo ordinario parte de `develop` y vuelve mediante pull request. `main` recibe únicamente promociones revisadas desde `develop`; no se realizan pushes directos. Mensajes de commit en inglés; interfaz y documentación en español.
