@@ -49,3 +49,5 @@ Las pruebas integrales de Supabase no se ejecutan todavía en CI porque requiere
 ## Flujo de ramas
 
 El trabajo ordinario parte de `develop` y vuelve mediante pull request. `main` recibe únicamente promociones revisadas desde `develop`. La disponibilidad de reglas automáticas de protección depende del plan de GitHub; si no están habilitadas, este flujo sigue siendo la política del proyecto.
+
+**Estado comprobado el 2026-11-09:** el remoto solo contiene `main`; la rama `develop` no existe y las últimas integraciones (por ejemplo `9dd3c94`, _Merge authentication hardening into main_) se fusionaron directamente en `main`. **PENDIENTE:** decidir si se recrea `develop` a partir de `main` o se ajusta este flujo. Mientras no exista `develop`, las ramas de cambio solo pueden partir de `main` y deben volver mediante pull request.

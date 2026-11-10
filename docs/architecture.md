@@ -4,7 +4,7 @@
 **Fecha:** 2026-10-11<br>
 **Estado:** stack APROBADO; diseño de implementación PROPUESTO para revisión.<br>
 **Repositorio:** `auxiliarsistemas-petrocasinos/aplicativoVehiculos`<br>
-**Documento funcional relacionado:** `especificacion-funcional-aplicativoVehiculos-v0.3.md` (borrador sujeto a revisión).
+**Documento funcional relacionado:** `especificacion-funcional-aplicativoVehiculos-v0.3.md`, versionado en el repositorio como `docs/requirements.md` (borrador sujeto a revisión).
 
 > Este documento no implica que los componentes ya estén instalados ni que los controles de seguridad estén implementados. No autoriza desplegar en producción ni utilizar datos reales de empleados.
 
@@ -24,6 +24,8 @@
 | Despliegue futuro | Servidor empresarial | Posibilidad de ejecución autohospedada, no migración automática |
 
 **PROPUESTO, como herramientas de implementación:** React Hook Form + Zod para formularios; Vitest para lógica; Playwright para pruebas de interfaz; Supabase CLI para migraciones, tipos y pruebas SQL. Fijar versiones compatibles mediante lockfile. Ninguna herramienta de pruebas reemplaza validaciones de PESV.
+
+**Nota de implementación (2026-11-09):** la demo adoptó Zod, Vitest, Playwright y Supabase CLI. React Hook Form no está instalado: los formularios usan componentes propios con validación Zod en `features/*/validation.ts` y en las rutas de servidor.
 
 ### Restricciones de producto confirmadas
 
@@ -86,6 +88,8 @@ docs/
 ```
 
 Esta estructura es orientativa; la inicialización deberá evitar archivos decorativos sin funcionalidad. No crear un paquete por cada tabla ni un microservicio para cada módulo.
+
+**Nota de implementación (2026-11-09):** la estructura real difiere de esta propuesta. Las rutas de `app/` son planas (`login`, `turno`, `turnos`, `vehiculos`, `campos`, `conductores`, `incidencias`, `auditoria`, `perfil`…) sin grupos por rol. `proxy.ts` refresca y valida la sesión, `features/auth/session.ts` construye el perfil en servidor, cada página o ruta de servidor comprueba el rol (con funciones de `features/auth/authorization.ts` para cuentas y exportación) y PostgreSQL/RLS sigue siendo la autoridad final. No existen `lib/authz/`, `lib/validation/`, `components/layout|forms|charts/` ni `supabase/tests/`: la validación vive en `features/*/validation.ts` y las pruebas de SQL/RLS se ejecutan con `scripts/integration.mjs`.
 
 ## 4. Autenticación y administración de cuentas
 

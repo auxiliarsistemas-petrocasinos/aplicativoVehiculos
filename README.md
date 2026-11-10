@@ -35,7 +35,7 @@ npm run seed:scale
 npm run dev
 ```
 
-`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las diez migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
+`db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las once migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
 
 Abrir `http://localhost:3000`. El despliegue de prueba en Supabase/Vercel fue autorizado el 12 de octubre de 2026; está pendiente de disponer de las conexiones y proyectos remotos. Ver `docs/deployment.md`.
 
@@ -91,4 +91,4 @@ La clave privilegiada solo sirve a cuentas y scripts técnicos. Las acciones de 
 
 No se versionan documentos originales, extracciones, credenciales ni datos reales. El catálogo digital conserva 245 referencias saneadas, seis preguntas de fatiga y una plantilla simplificada de 25 controles para livianos y 29 para pesados; requiere ratificación PESV. La plantilla anterior de 56 controles queda retirada para conservar la trazabilidad histórica. Los originales solo estuvieron en el directorio de adjuntos, fuera del repositorio.
 
-El trabajo ordinario parte de `develop` y vuelve mediante pull request. `main` recibe únicamente promociones revisadas desde `develop`; no se realizan pushes directos. Mensajes de commit en inglés; interfaz y documentación en español.
+El trabajo ordinario parte de `develop` y vuelve mediante pull request. `main` recibe únicamente promociones revisadas desde `develop`; no se realizan pushes directos. A 2026-11-09 la rama `develop` no existe en el remoto; ver el estado comprobado en [entorno de desarrollo](docs/development.md#flujo-de-ramas). Mensajes de commit en inglés; interfaz y documentación en español.

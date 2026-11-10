@@ -179,7 +179,7 @@ Una incidencia pendiente no bloquea estos pasos. Cerrar la aplicación o cerrar 
 - **IT:** facultades administrativas y configuración técnica, sin acceso innecesario a información sensible.
 - **Gráficos:** barras, líneas, dona, comparaciones temporales y tablas filtrables; cada indicador debe poder profundizar hasta registros sustentantes.
 
-**CONFIRMADO (stack):** Next.js + TypeScript, Tailwind CSS, shadcn/ui, Recharts y Supabase Auth/PostgreSQL/Storage; aplicación y operaciones de servidor en **monolito modular Next.js**, despliegue inicial en Vercel + Supabase y previsión de alojamiento propio. La implementación técnica concreta se recoge como propuesta en el borrador `arquitectura-tecnica-aplicativoVehiculos-v0.1.md`.
+**CONFIRMADO (stack):** Next.js + TypeScript, Tailwind CSS, shadcn/ui, Recharts y Supabase Auth/PostgreSQL/Storage; aplicación y operaciones de servidor en **monolito modular Next.js**, despliegue inicial en Vercel + Supabase y previsión de alojamiento propio. La implementación técnica concreta se recoge como propuesta en el borrador `arquitectura-tecnica-aplicativoVehiculos-v0.1.md` (versionado en el repositorio como `docs/architecture.md`).
 
 ## 9. Seguridad, trazabilidad y calidad
 
@@ -244,7 +244,7 @@ Una incidencia pendiente no bloquea estos pasos. Cerrar la aplicación o cerrar 
 1. Validar este borrador y marcar expresamente cada PROPUESTO aprobado o rechazado.
 2. Crear una **especificación de formularios** pregunta por pregunta, usando los cinco formatos y anotando origen, tipo, opciones, regla y evidencia.
 3. Cerrar matriz de estados y transiciones incluyendo regularización, sustitución y restricciones preventivas.
-4. Revisar el borrador de arquitectura técnica `arquitectura-tecnica-aplicativoVehiculos-v0.1.md` y aprobar las decisiones propuestas que aún no sean vinculantes.
+4. Revisar el borrador de arquitectura técnica `arquitectura-tecnica-aplicativoVehiculos-v0.1.md` (hoy `docs/architecture.md`) y aprobar las decisiones propuestas que aún no sean vinculantes.
 5. Preparar el **prompt maestro** de Codex con entregables verificables y tareas de control de calidad, priorizando funcionalidad real sobre pantallas simuladas.
 
 ---
