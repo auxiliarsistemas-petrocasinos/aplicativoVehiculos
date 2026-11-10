@@ -1,6 +1,17 @@
 # Despliegue de prueba en Supabase y Vercel
 
-## Estado confirmado
+## Estado comprobado — 2026-11-09
+
+Comprobación de solo lectura mediante la API de despliegues de GitHub y un navegador sin sesión iniciada en Vercel. No se accedió al panel de Vercel ni a Supabase.
+
+- **La integración de Vercel con GitHub está activa.** Cada pull request genera un despliegue _Preview_ y cada fusión en `main` un despliegue _Production_. GitHub registra despliegues de producción desde el 2026-10-30; el último corresponde a `b572f01` (fusión del PR #4).
+- **Protección:** las URL propias de cada despliegue (de vista previa y de producción) redirigen al inicio de sesión de Vercel. El dominio de producción `aplicativovehiculos.vercel.app` es **público, sin autenticación**.
+- **Backend:** el dominio de producción muestra el aviso «Supabase todavía no está configurado», que la aplicación presenta cuando faltan `NEXT_PUBLIC_SUPABASE_URL` o `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Por tanto, producción no tiene backend conectado y solo sirve la interfaz de acceso.
+- **No comprobado:** variables de entorno configuradas en Vercel (incluidas las de servidor), alcance exacto de _Deployment Protection_, estado del proyecto Supabase `rxfkllwpyxvvziaezzca` y migraciones remotas.
+
+**PENDIENTE:** decidir si el dominio de producción debe seguir público y si deben mantenerse los despliegues automáticos desde `main`. Mientras el dominio sea público, no configurar las variables de Supabase en producción: la aplicación quedaría accesible desde internet. Antes de hacerlo, completar las comprobaciones de [Verificación al disponer de conexiones](#verificación-al-disponer-de-conexiones).
+
+## Estado registrado el 2026-10-12
 
 El usuario autorizó el despliegue de prueba el 12 de octubre de 2026. El código se conserva en `develop`; `main` no se modifica. En esta sesión se confirmó acceso a GitHub, pero no hay herramientas, tokens, proyectos vinculados ni identidades disponibles para Supabase/Vercel. La base de `.env.local` corresponde a localhost y no sirve como backend de Vercel. No se ha comprobado una URL publicada ni el estado de una base remota. El usuario identificó Supabase `rxfkllwpyxvvziaezzca` y Vercel `auxiliar-sistemas-projects/aplicativovehiculos`; estos identificadores son públicos y no constituyen credenciales. Las menciones a los plugins no han expuesto herramientas invocables en esta sesión. La API de estados de GitHub también respondió `Forbidden`, mientras Git fetch/push sí están disponibles.
 

@@ -2,7 +2,7 @@
 
 Demostración funcional de gestión de flota de Petrocasinos, desarrollada desde cero. **Stack aprobado:** Next.js App Router + TypeScript, Tailwind CSS + shadcn/ui, Recharts y Supabase Auth/PostgreSQL/Storage. Los requisitos v0.3 y la arquitectura v0.1 se conservan en `docs/`; sus asuntos PROPUESTO/PENDIENTE no se presentan como política aprobada.
 
-**Solo datos ficticios. No habilitado para operación real.** Catálogo, reglas críticas PESV, tratamiento de datos, documentación legal y procedimientos excepcionales requieren validación empresarial. No se ha desplegado.
+**Solo datos ficticios. No habilitado para operación real.** Catálogo, reglas críticas PESV, tratamiento de datos, documentación legal y procedimientos excepcionales requieren validación empresarial. Vercel despliega automáticamente `main` en un dominio público, aún sin backend Supabase conectado; ver el estado comprobado en [despliegue](docs/deployment.md).
 
 ## Qué incluye
 
@@ -37,7 +37,7 @@ npm run dev
 
 `db:reset` destruye datos **locales**: úsalo solo en un entorno de prueba nuevo. Aplica las once migraciones y `supabase/seed.sql`. El bucket privado `evidence` y sus políticas se crean en migración. `bootstrap` requiere `BOOTSTRAP_EMAIL`, `BOOTSTRAP_ALIAS` y una `BOOTSTRAP_PASSWORD` temporal segura definida por el operador; solo funciona si no existe IT. Obliga a cambiar la clave. El seed de cuentas requiere `DEMO_PASSWORD` privada, es solo local y crea `demo.conductor`, `demo.conductor.s`, `demo.horizonte`, `demo.administrador`, `demo.gerencia` y `demo.sistemas`, todos con cambio obligatorio. Los dos campos y tres vehículos del seed son ficticios.
 
-Abrir `http://localhost:3000`. El despliegue de prueba en Supabase/Vercel fue autorizado el 12 de octubre de 2026; está pendiente de disponer de las conexiones y proyectos remotos. Ver `docs/deployment.md`.
+Abrir `http://localhost:3000`. El despliegue de prueba en Supabase/Vercel fue autorizado el 12 de octubre de 2026. La aplicación ya se publica en Vercel, pero la conexión con Supabase remoto sigue pendiente. Ver `docs/deployment.md`.
 
 ## Alternativa local para Docker con poco disco
 
