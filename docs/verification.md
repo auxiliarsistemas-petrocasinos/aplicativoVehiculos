@@ -14,7 +14,7 @@ Este resumen prevalece sobre las cifras de las secciones fechadas siguientes, qu
 | `npm test`                          | PASS · 29/29, ejecutado el 2026-11-09 sobre `main`.                                                                                   |
 | `npm run test:integration`          | Último registro: PASS · 24/24 (2026-10-29). No repetido después.                                                                      |
 | `npm run test:e2e`                  | Último registro: PASS · 12/12 (2026-10-29). No repetido después.                                                                      |
-| Supabase/Vercel administrado        | NOT RUN · no desplegado.                                                                                                              |
+| Supabase/Vercel administrado        | Vercel despliega `main` automáticamente (dominio público, sin backend); Supabase remoto NOT RUN. Ver `docs/deployment.md`.            |
 | Safari/WebKit y dispositivos reales | NOT RUN.                                                                                                                              |
 
 La simplificación del catálogo (`0bf0548`) modificó `scripts/integration.mjs` y `tests/unit/domain.test.ts` después de la última ejecución registrada de integración y E2E; esas suites deben repetirse antes de citarlas como vigentes.
