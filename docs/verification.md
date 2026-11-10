@@ -2,6 +2,23 @@
 
 Fecha: 2026-10-12. Rama de trabajo: `develop`, base `f934db1`. El repositorio remoto fue comprobado; se recuperó `develop` antes de modificar código. La rama inicial `work` pertenecía al entorno: no se desarrolló ni publicó en ella. No se tocó `main`, no se hizo push ni despliegue.
 
+## Estado vigente — 2026-11-09
+
+Este resumen prevalece sobre las cifras de las secciones fechadas siguientes, que se conservan como registro histórico de cada entrega.
+
+| Aspecto                             | Estado                                                                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Rama integrada                      | `main` (`5b87302`). `develop` no existe en el remoto; ver `docs/development.md`.                                                      |
+| Migraciones                         | 11, incluida `20261029170000_simplified_catalog.sql`.                                                                                 |
+| Catálogo vigente                    | `demo-2026.10.2-simplificado`: 25 controles comunes + 4 de pesados y 6 preguntas de fatiga. La versión de 56 controles está retirada. |
+| `npm test`                          | PASS · 29/29, ejecutado el 2026-11-09 sobre `main`.                                                                                   |
+| `npm run test:integration`          | Último registro: PASS · 24/24 (2026-10-29). No repetido después.                                                                      |
+| `npm run test:e2e`                  | Último registro: PASS · 12/12 (2026-10-29). No repetido después.                                                                      |
+| Supabase/Vercel administrado        | NOT RUN · no desplegado.                                                                                                              |
+| Safari/WebKit y dispositivos reales | NOT RUN.                                                                                                                              |
+
+La simplificación del catálogo (`0bf0548`) modificó `scripts/integration.mjs` y `tests/unit/domain.test.ts` después de la última ejecución registrada de integración y E2E; esas suites deben repetirse antes de citarlas como vigentes.
+
 ## Commits y estado de Git
 
 Implementación: `e89f47a` — `feat: implement secure fleet management demo` (96 archivos). Un commit documental posterior registra esta referencia y el cierre de verificación. Ambos pertenecen exclusivamente a `develop`. No se publicaron al remoto. Los requisitos aprobados y la arquitectura permanecen idénticos a la base `f934db1`.
@@ -18,7 +35,7 @@ Se leyó íntegramente el prompt maestro v0.2 adjunto y `AGENTS.md`, `README.md`
 | GA FO 20 Chequeo Vehicular PESV.docx                                  | Tablas y párrafos completos | 41 controles y metadatos; conflicto versión 03/02                           |
 | Checklist_Peritaje_Inicio_Operacion_Livianos_Pesados_Petrocasinos.pdf | Tres páginas                | 20 controles livianos, 15 controles técnicos pesados y resultados separados |
 
-`docs/forms-specification.md` contiene 245 referencias saneadas y correspondencia a seis preguntas y 56 controles consolidados. Los originales/extracciones permanecieron fuera del repositorio. Los datos diligenciados no se copiaron a documentación, pruebas ni seeds. Las versiones y desacuerdos siguen visibles.
+En esta entrega, `docs/forms-specification.md` contenía 245 referencias saneadas y correspondencia a seis preguntas y 56 controles consolidados (plantilla `demo-2026.10.1`, hoy retirada; ver estado vigente). Los originales/extracciones permanecieron fuera del repositorio. Los datos diligenciados no se copiaron a documentación, pruebas ni seeds. Las versiones y desacuerdos siguen visibles.
 
 ## Alcance por módulo
 
@@ -102,7 +119,7 @@ Ratificar catálogo y políticas operativas; configurar un proyecto Supabase de 
 
 ## Inventario de archivos de esta entrega
 
-Se modificó `README.md` y se agregaron los siguientes archivos. `AGENTS.md`, `docs/requirements.md` y `docs/architecture.md` se mantuvieron sin cambios. El historial Git identifica el contenido exacto de cada commit; los resultados de pruebas locales y las capturas se conservan fuera del seguimiento de Git.
+Inventario de la entrega del 2026-10-12; no incluye los archivos añadidos en entregas posteriores (por ejemplo `features/auth/authorization.ts`, `lib/database.types.ts`, `scripts/seed-scale.mjs` o `features/inspections/catalog-simplified.json`), que se consultan con `git log --name-status`. Se modificó `README.md` y se agregaron los siguientes archivos. `AGENTS.md`, `docs/requirements.md` y `docs/architecture.md` se mantuvieron sin cambios. El historial Git identifica el contenido exacto de cada commit; los resultados de pruebas locales y las capturas se conservan fuera del seguimiento de Git.
 
 - `.env.example`
 - `.gitignore`

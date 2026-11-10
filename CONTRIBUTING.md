@@ -12,6 +12,8 @@ El aplicativo es un MVP con datos ficticios y no está habilitado para operació
 
 No realizar pushes directos a `main`. Los cambios deben llegar mediante pull request y superar CI. La promoción de `develop` a `main` se realiza en un pull request independiente después de validar la entrega.
 
+A 2026-11-09 `develop` no existe en el remoto; el estado comprobado y la decisión pendiente se describen en [docs/development.md](docs/development.md#flujo-de-ramas).
+
 ## Preparación
 
 1. Instalar la versión de Node declarada en `.nvmrc` y una versión de npm compatible con `package.json`.

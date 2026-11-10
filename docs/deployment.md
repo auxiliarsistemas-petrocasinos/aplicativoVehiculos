@@ -31,7 +31,7 @@ npx supabase link --project-ref IDENTIFICADOR_DEL_PROYECTO
 npx supabase db push --linked
 ```
 
-Aplicar las diez migraciones en orden. El bucket privado `evidence`, su límite de 8 MB, los MIME admitidos y las políticas se crean mediante migraciones. Verificar los permisos reales sobre `auth.users`, el trigger de cambio de contraseña, las tablas de sesiones y Storage en el servicio administrado; las pruebas locales no certifican esos permisos remotos.
+Aplicar las once migraciones en orden; la undécima, `20261029170000_simplified_catalog.sql`, carga el catálogo simplificado de demostración. El bucket privado `evidence`, su límite de 8 MB, los MIME admitidos y las políticas se crean mediante migraciones. Verificar los permisos reales sobre `auth.users`, el trigger de cambio de contraseña, las tablas de sesiones y Storage en el servicio administrado; las pruebas locales no certifican esos permisos remotos.
 
 Deshabilitar registro público y cuentas anónimas; usar contraseña mínima de 12 caracteres. Configurar Site URL y redirect URLs para el dominio exacto de pruebas. Mantener el restablecimiento administrativo y revisar los endpoints alternativos de recuperación del proveedor; no asumir que ocultar una opción en la UI los deshabilita.
 
@@ -39,7 +39,7 @@ El bootstrap inicial necesita correo, alias y clave temporal elegidos por el ope
 
 ## Vercel
 
-Importar `auxiliarsistemas-petrocasinos/aplicativoVehiculos`, seleccionar Next.js y la raíz del repositorio, y desplegar la revisión autorizada de `develop` a un proyecto de pruebas. Usar `npm ci` y `npm run build`. No promover `main` ni reutilizar un backend empresarial con datos reales.
+Importar `auxiliarsistemas-petrocasinos/aplicativoVehiculos`, seleccionar Next.js y la raíz del repositorio, y desplegar la revisión autorizada de `develop` a un proyecto de pruebas. Usar `npm ci` y `npm run build`. No promover `main` ni reutilizar un backend empresarial con datos reales. A 2026-11-09 `develop` no existe en el remoto y el código integrado está en `main`; la revisión que se despliegue debe acordarse antes (ver `docs/development.md`).
 
 Configurar en Vercel, para el entorno de pruebas elegido:
 

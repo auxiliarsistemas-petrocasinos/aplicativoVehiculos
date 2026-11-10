@@ -24,6 +24,40 @@ Las condiciones que dependen de equipamiento o carga se responden con No aplica 
 
 La documentación obligatoria continúa validándose además mediante el registro administrativo de documentos; la respuesta de la inspección no reemplaza esa vigencia ni habilita el vehículo.
 
+La tabla siguiente reproduce `features/inspections/catalog-simplified.json` (versión `demo-2026.10.2-simplificado`, estado `demo_only`), que es la fuente del catálogo y de la migración `20261029170000_simplified_catalog.sql`. Si difieren, prevalece el JSON. Las seis preguntas de estado del conductor son las `F09-1` a `F09-6` de la tabla del catálogo anterior, sin cambios.
+
+| ID     | Control                                                                                                   | Categoría                | Aplica a | Referencias anteriores                   |
+| ------ | --------------------------------------------------------------------------------------------------------- | ------------------------ | -------- | ---------------------------------------- |
+| SIM-01 | ¿La carrocería, los vidrios y los espejos están en buen estado?                                           | Exterior                 | Todos    | PER-1-01, F20-35, F20-36                 |
+| SIM-02 | ¿Hay golpes o daños nuevos que deban reportarse?                                                          | Exterior                 | Todos    | F20-37, PER-2-05                         |
+| SIM-03 | ¿Se observan fugas de aceite, combustible, refrigerante u otros líquidos?                                 | Fugas                    | Todos    | PER-1-10, PER-2-08                       |
+| SIM-04 | ¿Las llantas tienen presión y desgaste visual adecuados?                                                  | Llantas                  | Todos    | F20-18, F20-19, PER-1-04, PER-2-04       |
+| SIM-05 | ¿Las llantas están libres de cortes, protuberancias o daños graves?                                       | Llantas                  | Todos    | F20-18, F20-19, PER-1-04, PER-2-04       |
+| SIM-06 | ¿Las ruedas y sus tuercas están aparentemente completas y en buen estado?                                 | Llantas                  | Todos    | F20-18, F20-19, PER-2-04                 |
+| SIM-07 | ¿Funcionan las luces delanteras, direccionales y estacionarias?                                           | Luces                    | Todos    | F20-12, F20-13, F20-15, F20-16           |
+| SIM-08 | ¿Funcionan las luces de freno y reversa, y la alarma de reversa si aplica?                                | Luces                    | Todos    | F20-14, F20-17, F20-30                   |
+| SIM-09 | ¿El motor enciende y funciona sin ruidos, vibraciones o humo anormal?                                     | Motor                    | Todos    | PER-1-16, PER-1-20, PER-2-14             |
+| SIM-10 | ¿Los niveles de aceite y refrigerante son adecuados, según el procedimiento seguro de revisión?           | Motor                    | Todos    | F20-27, F20-28, PER-2-06                 |
+| SIM-11 | ¿El tablero está libre de testigos de advertencia que indiquen una falla?                                 | Tablero                  | Todos    | F20-31, PER-1-11                         |
+| SIM-12 | ¿El pedal del freno y el freno de estacionamiento responden normalmente?                                  | Frenos                   | Todos    | F20-32, PER-1-14, PER-1-17, PER-2-12     |
+| SIM-13 | ¿La dirección responde normalmente, sin dureza ni juego anormal?                                          | Dirección                | Todos    | PER-1-18, PER-2-13                       |
+| SIM-14 | ¿El embrague y los cambios funcionan correctamente, si aplica?                                            | Conducción               | Todos    | F20-29, PER-1-19                         |
+| SIM-15 | ¿Se perciben ruidos, vibraciones o comportamientos anormales al mover el vehículo?                        | Conducción               | Todos    | PER-1-20, PER-2-14                       |
+| SIM-16 | ¿El parabrisas y los vidrios permiten una buena visibilidad?                                              | Visibilidad              | Todos    | PER-1-01, F20-36                         |
+| SIM-17 | ¿Funcionan los limpiaparabrisas y el sistema de lavado?                                                   | Visibilidad              | Todos    | F20-23, PER-1-13                         |
+| SIM-18 | ¿Funcionan el cinturón de seguridad y la bocina?                                                          | Cabina                   | Todos    | F20-30, F20-40, PER-1-12, PER-1-13       |
+| SIM-19 | ¿El asiento y los controles del conductor están en condiciones adecuadas?                                 | Cabina                   | Todos    | F20-34, F20-41                           |
+| SIM-20 | ¿El extintor está vigente, asegurado y accesible, cuando aplica?                                          | Seguridad                | Todos    | PER-1-15, F17-L37                        |
+| SIM-21 | ¿Están disponibles las señales de carretera, el botiquín y los elementos de emergencia requeridos?        | Seguridad                | Todos    | F20-06, F20-07, F20-08, F20-09, PER-1-15 |
+| SIM-22 | ¿Están disponibles el gato, la herramienta para cambio de llanta y los elementos requeridos?              | Herramientas             | Todos    | F20-10, F20-11, F20-21, F20-22           |
+| SIM-23 | ¿La documentación obligatoria del vehículo está vigente y disponible?                                     | Documentos               | Todos    | F20-01, F20-02, F20-03, F20-04, F20-05   |
+| SIM-24 | ¿Las placas están instaladas y son legibles?                                                              | Identificación           | Todos    | PER-1-02, F20-PLACA                      |
+| SIM-25 | ¿El vehículo está en condiciones visibles adecuadas para iniciar la operación?                            | Observación general      | Todos    | PER-1-16, PER-2-16                       |
+| SIM-26 | ¿El furgón, la plataforma y sus puertas o cierres están asegurados y en buen estado?                      | Carrocería de carga      | Pesados  | PER-2-01, F17-B26                        |
+| SIM-27 | ¿La carga está distribuida y asegurada, cuando el vehículo sale cargado?                                  | Carga                    | Pesados  | PER-2-01                                 |
+| SIM-28 | ¿Los frenos de aire, el sistema hidráulico u otros equipos especiales funcionan correctamente, si aplica? | Sistema especial         | Pesados  | PER-2-11, PER-2-13                       |
+| SIM-29 | ¿Las llantas corresponden a la configuración autorizada del vehículo?                                     | Configuración de llantas | Pesados  | PER-2-04                                 |
+
 ## Catálogo anterior y correspondencia
 
 Cada ID consolidado conserva sus fuentes en `features/inspections/catalog.json`, usado para generar la migración versionada. No se borran controles por coincidencia aproximada. Las agrupaciones de luces, espejos y llantas del peritaje se vinculan a controles detallados de GA FO 20; todos los controles detallados permanecen.

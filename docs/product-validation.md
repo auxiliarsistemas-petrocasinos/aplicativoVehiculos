@@ -21,6 +21,10 @@ aprobación empresarial. No registra entrevistas que todavía no se han realizad
 | Offline completo y resolución de conflictos | Aplazado                | Requiere flujo aprobado           |
 | Mantenimiento integral y costos             | Aplazado                | Alcance aún no aprobado           |
 
+El límite de 50 evidencias/80 MiB es agregado por conductor y turno y se suma a los límites por
+formulario (cinco fotografías por respuesta y ocho por incidencia), descritos en
+[decisiones de implementación](decisions/001-implementation.md).
+
 ## Sesiones requeridas
 
 Cada sesión debe registrar fecha, participantes, rol, decisiones, desacuerdos y aprobación.
