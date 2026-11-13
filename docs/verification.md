@@ -2,22 +2,23 @@
 
 Fecha: 2026-10-12. Rama de trabajo: `develop`, base `f934db1`. El repositorio remoto fue comprobado; se recuperó `develop` antes de modificar código. La rama inicial `work` pertenecía al entorno: no se desarrolló ni publicó en ella. No se tocó `main`, no se hizo push ni despliegue.
 
-## Estado vigente — 2026-11-09
+## Estado vigente — 2026-11-11
 
 Este resumen prevalece sobre las cifras de las secciones fechadas siguientes, que se conservan como registro histórico de cada entrega.
 
-| Aspecto                             | Estado                                                                                                                                |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Rama integrada                      | `main` (`5b87302`). `develop` no existe en el remoto; ver `docs/development.md`.                                                      |
-| Migraciones                         | 11, incluida `20261029170000_simplified_catalog.sql`.                                                                                 |
-| Catálogo vigente                    | `demo-2026.10.2-simplificado`: 25 controles comunes + 4 de pesados y 6 preguntas de fatiga. La versión de 56 controles está retirada. |
-| `npm test`                          | PASS · 29/29, ejecutado el 2026-11-09 sobre `main`.                                                                                   |
-| `npm run test:integration`          | Último registro: PASS · 24/24 (2026-10-29). No repetido después.                                                                      |
-| `npm run test:e2e`                  | Último registro: PASS · 12/12 (2026-10-29). No repetido después.                                                                      |
-| Supabase/Vercel administrado        | Vercel despliega `main` automáticamente (dominio público, sin backend); Supabase remoto NOT RUN. Ver `docs/deployment.md`.            |
-| Safari/WebKit y dispositivos reales | NOT RUN.                                                                                                                              |
+| Aspecto                             | Estado                                                                                                                                       |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rama de trabajo                     | `develop` (`508501a`), publicada en el remoto; `main` conserva `508501a` y recibe promociones por pull request. Ver `docs/development.md`.   |
+| Migraciones                         | 11, incluida `20261029170000_simplified_catalog.sql`.                                                                                        |
+| Catálogo vigente                    | `demo-2026.10.2-simplificado`: 25 controles comunes + 4 de pesados y 6 preguntas de fatiga. La versión de 56 controles está retirada.        |
+| `npm run verify`                    | PASS · incluye 29/29 unitarias, ejecutado el 2026-11-11 sobre `main` (`508501a`).                                                            |
+| `npm run test:integration`          | PASS · 24/24, ejecutado el 2026-11-11 sobre `main` (`508501a`) contra la pila local liviana.                                                 |
+| `npm run test:e2e`                  | PASS · 12/12, ejecutado el 2026-11-11 sobre `main` (`508501a`) contra el servidor standalone. Contra `next dev`: FAIL intermitente (8/12).   |
+| Supabase CLI: `supabase start`      | FAIL para el acceso · aplica las 11 migraciones y el seed, pero Auth rechaza el inicio de sesión con `email_provider_disabled` (2026-11-11). |
+| Supabase/Vercel administrado        | Vercel despliega `main` automáticamente (dominio público, sin backend); Supabase remoto NOT RUN. Ver `docs/deployment.md`.                   |
+| Safari/WebKit y dispositivos reales | NOT RUN.                                                                                                                                     |
 
-La simplificación del catálogo (`0bf0548`) modificó `scripts/integration.mjs` y `tests/unit/domain.test.ts` después de la última ejecución registrada de integración y E2E; esas suites deben repetirse antes de citarlas como vigentes.
+Integración y E2E completos se repitieron el 2026-11-11, después de la simplificación del catálogo (`0bf0548`); el detalle está en «Repetición de integración y E2E sobre `main` (T-04) — 2026-11-11». Ambas suites siguen fuera de CI.
 
 ## Commits y estado de Git
 
@@ -301,3 +302,46 @@ agotó cinco segundos durante compilación en frío y el mismo flujo pasó en An
 se ajustó a diez segundos. La repetición completa quedó 11/12: el cierre en iPhone fue confirmado,
 pero la navegación tardó más de cinco segundos bajo carga. Se amplió únicamente esa espera a quince
 segundos y el recorrido completo afectado pasó 3/3 en escritorio, Android e iPhone.
+
+## Repetición de integración y E2E sobre `main` (T-04) — 2026-11-11
+
+Ejecución de la tarjeta propuesta T-04 del primer incremento del plan `docs/aidlc/AIDLC-P02.md` (§2.3 y R-02), sobre `main` en `508501a`, en Windows y con datos exclusivamente ficticios en localhost. No modifica código, migraciones ni datos versionados. La ejecución se hizo con asistencia de IA y está pendiente de revisión por una persona distinta; no equivale a la recertificación de la línea base (T-05).
+
+| Comprobación                              | Resultado | Evidencia y alcance                                                                                                                                                  |
+| ----------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run verify`                          | PASS      | Formato, lint, tipos, 29/29 unitarias y build.                                                                                                                       |
+| Supabase CLI: `supabase start`            | FAIL      | Aplica las 11 migraciones y el seed, pero Auth rechaza el inicio de sesión con `email_provider_disabled`. No sirvió como base para las suites persistentes.          |
+| Pila local liviana (`README.md`)          | PASS      | PostgreSQL, GoTrue, PostgREST y Storage reales en contenedores nuevos; `scripts/local-migrate.mjs` aplica las 11 migraciones de `supabase/migrations` y el seed SQL. |
+| `npm run test:integration`                | PASS      | 24/24 contra la pila liviana (`.local/integration-results.json`, ignorado por Git).                                                                                  |
+| `npm run test:e2e` contra `next dev`      | FAIL      | 8/12 en la corrida completa; al repetir los cuatro casos fallidos, 1/4.                                                                                              |
+| `npm run test:e2e` contra standalone      | PASS      | 12/12 con `npm start` en el puerto 3000 (escritorio, Pixel 7 e iPhone 13 emulados en Chromium).                                                                      |
+| Supabase/Vercel administrado y producción | NOT RUN   | Fuera de autorización.                                                                                                                                               |
+| Safari/WebKit y dispositivos físicos      | NOT RUN   | Sin cambios respecto de las verificaciones anteriores.                                                                                                               |
+
+Hallazgos, que se atienden en tarjetas propias y no dentro de T-04:
+
+- **Acceso con Supabase CLI.** Con la configuración versionada (`supabase/config.toml`, `[auth.email] enable_signup = false`), la preparación estándar del `README.md` no permite iniciar sesión. Tarjeta propuesta: T-08.
+- **Intermitencia del E2E contra `next dev`.** Los mismos recorridos pasan contra el servidor standalone. No se conservó el detalle de los casos fallidos: el reporte de Playwright fue reemplazado por el de la corrida posterior. Tarjeta propuesta: T-09.
+
+## Rama `develop` y limpieza del remoto — 2026-11-11
+
+Decisión del usuario: trabajar únicamente en `develop`, sin crear ramas de cambio por tarea. Se recreó `develop` desde `main` en `508501a`, se publicó en `origin` y quedó configurada para seguir esa referencia. La política de promoción a `main` mediante pull request y control P no cambia (ver `docs/development.md`).
+
+Se eliminaron cuatro ramas locales ya fusionadas en `main`, sin commits propios: `chore/aidlc-templates` (`9634e00`), `docs/aidlc-p02-adoption` (`81f7177`), `docs/fix-documentation-inconsistencies` (`4f073de`) y `docs/vercel-deployment-status` (`9db6489`). También se eliminaron del remoto `chore/aidlc-templates` y `docs/aidlc-p02-adoption`, ambas fusionadas mediante los PR #7 y #6 y sin PR abiertos al momento de borrarlas. El remoto quedó con `main` y `develop`, ambas en `508501a`; localmente solo quedan esas dos ramas.
+
+Estos cambios no modifican código, migraciones ni datos. Al cierre de esta verificación, los cambios documentales de `develop` siguen sin confirmar y `origin/develop` conserva `508501a`.
+
+## Ejecución local de la aplicación — 2026-11-11
+
+Comprobación posterior a T-04, en Windows, con Node 24.22.1 y Docker 29.7.2. La aplicación se sirvió con el servidor standalone ya compilado en `.next/standalone/server.js` sobre el puerto 3000; el gateway de la pila liviana (`scripts/local/gateway.mjs`) seguía en ejecución y los cuatro contenedores `vehicles-*` estaban detenidos. Se reiniciaron con `docker start` y Auth, PostgREST y Storage respondieron; los datos ficticios persistidos se conservaron.
+
+| Comprobación                                               | Resultado | Evidencia y alcance                                                                                              |
+| ---------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
+| Contenedores `vehicles-*`                                  | PASS      | Los cuatro arrancaron; Auth respondió `v2.186.0` y PostgREST devolvió HTTP 200 a través del gateway en 54321.    |
+| `http://localhost:3000/login`                              | PASS      | HTTP 200; la aplicación responde en la interfaz de escucha configurada.                                          |
+| `node scripts/run-playwright.mjs tests/e2e/access.spec.ts` | PASS      | 6/6 en escritorio, Pixel 7 e iPhone 13 emulados en Chromium.                                                     |
+| `node scripts/run-playwright.mjs`                          | PASS      | 12/12 en 2,7 minutos contra el servidor standalone; incluye los recorridos administrativo y de turno completos.  |
+| Primera preparación en un entorno nuevo                    | NOT RUN   | `local-services.mjs` no se ejecutó porque `.env.local` ya existía y el script no sobrescribe configuración.      |
+| Supabase/Vercel administrado y producción                  | NOT RUN   | Fuera de autorización. La ejecución es localhost y con datos ficticios; no constituye un despliegue empresarial. |
+
+Conclusión: la aplicación se puede levantar y operar localmente con la pila descrita, incluido el recorrido completo de turno. No se validó una instalación desde cero ni un despliegue productivo.

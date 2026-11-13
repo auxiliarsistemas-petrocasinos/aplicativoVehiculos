@@ -13,12 +13,16 @@
 | T-05 | Revisión independiente de la línea base (recertificación) | Crítico          | D-01, D-05, T-04 |
 | T-06 | Documentar reversión en Vercel y respaldo de Supabase     | Alto             | D-01             |
 | T-07 | Registrar la autorización de las herramientas de IA       | Bajo             | D-01             |
+| T-08 | Permitir el acceso local con `supabase start`             | Medio            | D-01             |
+| T-09 | Resolver la intermitencia del E2E contra `next dev`       | Bajo             | D-01             |
+
+T-08 y T-09 nacen de los hallazgos de T-04 (2026-11-11). No están en la sección 13 del plan: su inclusión en el primer incremento y su prioridad están por decidir.
 
 ---
 
 ### T-01 · Proteger la rama `main`
 
-- **Fuente:** plan AIDLC-P02 §2.2 (revisión por otro profesional) y R-01. Evidencia: PR #1 a #5 fusionados con 0 revisiones; `main` sin protección (API de GitHub).
+- **Fuente:** plan AIDLC-P02 §2.2 (revisión por otro profesional) y R-01. Evidencia: PR #1 a #7 fusionados con 0 revisiones; `main` sin protección (API de GitHub, 2026-11-11).
 - **Riesgo propuesto:** Medio. Factor: permisos del proceso de integración. Es un cambio de configuración del repositorio, reversible, sin datos.
 - **Responsable:** {{pendiente}} · **Revisor:** {{pendiente, distinto del autor}}
 
@@ -79,6 +83,8 @@
 
 **Notas:** puede ejecutarse antes de asignar roles, porque solo produce evidencia. La evaluación de llevar estas suites a CI queda como tarjeta posterior.
 
+**Avance (2026-11-11):** las tres suites se ejecutaron sobre `508501a` y el resultado está redactado en `docs/verification.md` («Estado vigente» y sección T-04), pendiente de revisión por una persona y de integración mediante PR. Los dos fallos encontrados se proponen como T-08 y T-09.
+
 ---
 
 ### T-05 · Revisión independiente de la línea base (recertificación)
@@ -125,6 +131,41 @@
 - [ ] El plan §8 indica qué herramientas están autorizadas (hoy en uso: Codex y Claude Code), su finalidad y los datos permitidos.
 - [ ] Se registra la verificación de acceso, retención y condiciones del proveedor, con fecha y enlace.
 - [ ] Si una herramienta no se autoriza, el plan indica cómo se sustituye.
+
+---
+
+### T-08 · Permitir el acceso local con `supabase start`
+
+- **Fuente:** hallazgo de T-04 (2026-11-11, `docs/verification.md`). Con la configuración versionada (`supabase/config.toml`, `[auth.email] enable_signup = false`), `supabase start` aplica las once migraciones y el seed, pero Auth rechaza el inicio de sesión con `email_provider_disabled`. La preparación estándar del `README.md` no permite entrar a la aplicación.
+- **Riesgo propuesto:** Medio. Factor: permisos (configuración de autenticación). Afecta solo al entorno local, pero el archivo es la configuración versionada de Auth.
+- **Responsable:** {{pendiente}} · **Revisor:** {{pendiente, distinto del autor}}
+
+**Criterios de aceptación**
+
+- [ ] Desde una base local nueva creada con la preparación estándar del `README.md`, una cuenta ficticia del seed inicia sesión.
+- [ ] Escenario negativo comprobado: el registro público de cuentas sigue rechazado (`README.md`, «Seguridad y operación pendiente»).
+- [ ] La causa queda confirmada y descrita en la tarjeta antes de cambiar la configuración.
+- [ ] `npm run test:integration` y `npm run test:e2e` se ejecutan contra la pila de Supabase CLI y el resultado se registra en `docs/verification.md`.
+- [ ] `README.md` y `docs/development.md` describen la preparación que realmente funciona.
+
+**Notas:** mientras no se resuelva, la pila local liviana del `README.md` es la única base local comprobada. Define el ambiente de pruebas pendiente en el plan §5.
+
+---
+
+### T-09 · Resolver la intermitencia del E2E contra `next dev`
+
+- **Fuente:** hallazgo de T-04 (2026-11-11, `docs/verification.md`). `npm run test:e2e` contra `next dev` dio 8/12 y, al repetir los cuatro casos fallidos, 1/4; contra el servidor standalone dio 12/12.
+- **Riesgo propuesto:** Bajo. Infraestructura de pruebas, sin datos ni cambios de producto. Afecta la confiabilidad de la evidencia del control Q.
+- **Responsable:** {{pendiente}} · **Revisor:** {{pendiente}}
+
+**Criterios de aceptación**
+
+- [ ] Los casos que fallan contra `next dev` y su error quedan identificados y enlazados (el reporte de la corrida del 2026-11-11 no se conservó).
+- [ ] Queda decidido y documentado en `docs/development.md` qué servidor es la referencia para la evidencia E2E de las tarjetas.
+- [ ] `npm run test:e2e` pasa 12/12 en tres corridas consecutivas en el modo de referencia, con el resultado enlazado (propuesta de umbral).
+- [ ] Si `next dev` deja de ser un modo válido para la evidencia, `README.md` lo indica.
+
+**Notas:** `docs/verification.md` ya registró esperas ajustadas por compilación en frío el 2026-10-29; puede ser la misma causa, sin confirmar.
 
 ---
 
